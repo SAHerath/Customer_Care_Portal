@@ -1,0 +1,6 @@
+@SriCare.Auth_HostAddress = http://localhost:5208
+
+GET {{SriCare.Auth_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

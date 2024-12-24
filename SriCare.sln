@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SriCare.AppHost", "SriCare.AppHost\SriCare.AppHost.csproj", "{970B66ED-DABB-482A-A153-1ED1268CBD22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SriCare.ServiceDefaults", "SriCare.ServiceDefaults\SriCare.ServiceDefaults.csproj", "{DEECE450-B7BE-4F87-AE09-4AC66FC9FA3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SriCare.Auth", "SriCare.Auth\SriCare.Auth.csproj", "{D2433422-CD6E-41AC-85C5-A67CA24D25D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SriCare.ApiGateway", "SriCare.ApiGateway\SriCare.ApiGateway.csproj", "{2E958B8E-B8E5-4A3E-8E12-E15A5C62B009}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{970B66ED-DABB-482A-A153-1ED1268CBD22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{970B66ED-DABB-482A-A153-1ED1268CBD22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{970B66ED-DABB-482A-A153-1ED1268CBD22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{970B66ED-DABB-482A-A153-1ED1268CBD22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEECE450-B7BE-4F87-AE09-4AC66FC9FA3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEECE450-B7BE-4F87-AE09-4AC66FC9FA3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEECE450-B7BE-4F87-AE09-4AC66FC9FA3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEECE450-B7BE-4F87-AE09-4AC66FC9FA3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2433422-CD6E-41AC-85C5-A67CA24D25D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2433422-CD6E-41AC-85C5-A67CA24D25D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2433422-CD6E-41AC-85C5-A67CA24D25D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2433422-CD6E-41AC-85C5-A67CA24D25D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E958B8E-B8E5-4A3E-8E12-E15A5C62B009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E958B8E-B8E5-4A3E-8E12-E15A5C62B009}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E958B8E-B8E5-4A3E-8E12-E15A5C62B009}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E958B8E-B8E5-4A3E-8E12-E15A5C62B009}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

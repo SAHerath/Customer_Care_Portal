@@ -1,0 +1,6 @@
+@SriCare.ApiGateway_HostAddress = http://localhost:5043
+
+GET {{SriCare.ApiGateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
