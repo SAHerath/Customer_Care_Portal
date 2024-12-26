@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="../SriCare.ApiGateway/SriCare.ApiGateway.csproj" />
     <ProjectReference Include="../SriCare.Auth/SriCare.Auth.csproj" />
+    <ProjectReference Include="../SriCare.Core/SriCare.Core.Api/SriCare.Core.Api.csproj" />
   </ItemGroup>
 
 </Project>

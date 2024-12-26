@@ -11,8 +11,11 @@ var authService = builder.AddProject<Projects.SriCare_Auth>("authService")
                     .WithReference(authDB)
                     .WaitFor(authDB);
 
+var coreService = builder.AddProject<Projects.SriCare_Core_Api>("coreService");
+
 // Configure API Gateway
 var apiGateway = builder.AddProject<Projects.SriCare_ApiGateway>("apigateway")
-    .WithReference(authService);
+    .WithReference(authService)
+    .WithReference(coreService);
 
 builder.Build().Run();
