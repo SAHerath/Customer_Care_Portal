@@ -11,7 +11,10 @@ var authService = builder.AddProject<Projects.SriCare_Auth>("authService")
                     .WithReference(authDB)
                     .WaitFor(authDB);
 
-var coreService = builder.AddProject<Projects.SriCare_Core_Api>("coreService");
+var coreDB = postgresServer.AddDatabase("coredb");
+var coreService = builder.AddProject<Projects.SriCare_Core_Api>("coreService")
+                    .WithReference(coreDB)
+                    .WaitFor(coreDB);
 
 // Configure API Gateway
 var apiGateway = builder.AddProject<Projects.SriCare_ApiGateway>("apigateway")

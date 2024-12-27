@@ -3,11 +3,14 @@ using Microsoft.IdentityModel.Tokens;
 using SriCare.Core.Api.Swagger;
 using Common.Utils;
 using Common.Utils.Middlewares;
+using MediatR;
+using SriCare.Core.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.AddServiceDefaults();
+
 builder.Services.AddSwaggerDoc();
 
 builder.Services.AddControllers();
@@ -28,12 +31,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 });
 builder.Services.AddAuthorization();
 builder.Services.AddCommonUtilsConfigurations();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+builder.AddNpgsqlDbContext<CoreDBContext>("coredb", configureSettings:settings => {settings.DisableRetry = false;});
+builder.Services.AddEFConfigurations();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    await app.ConfigureDatabaseAsync();
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
