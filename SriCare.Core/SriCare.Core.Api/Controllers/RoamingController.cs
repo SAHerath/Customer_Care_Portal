@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SriCare.Core.Application.Features.Roaming.GetRoamingByUserId;
+using SriCare.Core.Application.Features.Roaming.UpdateRoamingStatus;
 
 namespace SriCare.Core.Api.Controllers;
 
@@ -20,4 +21,14 @@ public class RoamingController(IMediator bus, ILogger<RoamingController> logger,
         logger.LogInformation("Calling get method");
         return Ok(await bus.Send(new GetRoamingByUserIdQuery { UserId = userIdentity.Id}));
     }
+
+    [HttpPatch("{id}/activate")]
+    public async Task<IActionResult> UpdateActivateFlag(Guid id, [FromBody] UpdateRoamingStatusCommand command)
+    {
+        logger.LogInformation("Update Roaming Activation");
+        command.Id = id;
+        await bus.Send(command);
+        return Ok();
+    }
+
 }
