@@ -16,6 +16,7 @@ builder.AddNpgsqlDbContext<AppDBContext>("authdb", configureSettings:settings =>
 builder.AddServiceDefaults();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerDoc();
+builder.AddRabbitMQClient("messaging");
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

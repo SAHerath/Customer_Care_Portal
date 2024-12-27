@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -54,7 +55,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
         // NOTE: We cannot inject UserManager<TUser> directly because the TUser generic parameter is currently unsupported by RDG.
         // https://github.com/dotnet/aspnetcore/issues/47338
         routeGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>>
-            ([FromBody] CreateUserDto registration, HttpContext context, [FromServices] IServiceProvider sp) =>
+            ([FromBody] CreateUserDto registration, HttpContext context, [FromServices] IServiceProvider sp, RabbitMQ.Client.IConnection connection) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
 
@@ -75,8 +76,10 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
             // Add customization to the Endpoint
             var user = new TUser{
                 FirstName = registration.FirstName,
-                LastName = registration.LastName
+                LastName = registration.LastName,
+                PhoneNumber = registration.PhoneNumber,
             };
+
             await userStore.SetUserNameAsync(user, email, CancellationToken.None);
             await emailStore.SetEmailAsync(user, email, CancellationToken.None);
             var result = await userManager.CreateAsync(user, registration.Password);
@@ -85,6 +88,22 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
             {
                 return CreateValidationProblem(result);
             }
+
+            var channel = connection.CreateModel();
+            channel.QueueDeclare(queue: "roamingEvents",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+
+            var bodyMessage = new {UserId = user.Id, Email = user.Email, PhoneNumber =user.PhoneNumber};
+            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(bodyMessage));
+
+            channel.BasicPublish(exchange: string.Empty,
+                     routingKey: "roamingEvents",
+ 					 mandatory: false,
+                     basicProperties: null,
+                     body: body);
 
             await SendConfirmationEmailAsync(user, userManager, context, email);
             return TypedResults.Ok();

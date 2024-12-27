@@ -5,6 +5,8 @@ using Common.Utils;
 using Common.Utils.Middlewares;
 using MediatR;
 using SriCare.Core.Persistence;
+using SriCare.Core.Api.HostedServices;
+using SriCare.Core.Api.MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,7 @@ builder.Services.AddSwaggerDoc();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.AddRabbitMQClient("messaging");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>{
@@ -31,9 +34,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 });
 builder.Services.AddAuthorization();
 builder.Services.AddCommonUtilsConfigurations();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+builder.Services.AddMediatRConfiguration();
 builder.AddNpgsqlDbContext<CoreDBContext>("coredb", configureSettings:settings => {settings.DisableRetry = false;});
 builder.Services.AddEFConfigurations();
+builder.Services.AddHostedService<RabbitMQService>();
 
 var app = builder.Build();
 
