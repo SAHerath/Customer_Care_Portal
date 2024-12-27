@@ -5,5 +5,5 @@ public class UserIdentity : IUserIdentity
     public string UserName { get; set; }
     public string AccessToken { get; set; }
     public string Email { get; set; }
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 }

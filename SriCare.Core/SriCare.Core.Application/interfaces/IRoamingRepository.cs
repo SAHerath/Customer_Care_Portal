@@ -4,5 +4,5 @@ namespace SriCare.Core.Application.Interfaces;
 
 public interface IRoamingRepository:IRepository<Roaming>
 {
-    
+     Task<Roaming> GetByUserIdAsync(Guid id);
 }

@@ -1,10 +1,13 @@
 using Common.Utils.Account;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SriCare.Core.Application.Features.Roaming.GetRoamingByUserId;
 
 namespace SriCare.Core.Api.Controllers;
 
 [Route("roaming")]
+[Authorize]
 [ApiController]
 public class RoamingController(IMediator bus, ILogger<RoamingController> logger, IUserIdentity user) : ControllerBase
 {
@@ -13,8 +16,8 @@ public class RoamingController(IMediator bus, ILogger<RoamingController> logger,
     private readonly IUserIdentity userIdentity = user;
 
     [HttpGet]
-    public async Task<OkObjectResult> GetByUserId() {
+    public async Task<IActionResult> GetByUserId() {
         logger.LogInformation("Calling get method");
-        return Ok("Test User");
+        return Ok(await bus.Send(new GetRoamingByUserIdQuery { UserId = userIdentity.Id}));
     }
 }
