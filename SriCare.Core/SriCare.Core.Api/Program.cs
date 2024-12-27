@@ -7,6 +7,7 @@ using MediatR;
 using SriCare.Core.Persistence;
 using SriCare.Core.Api.HostedServices;
 using SriCare.Core.Api.MediatR;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,12 @@ builder.AddServiceDefaults();
 
 builder.Services.AddSwaggerDoc();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+        .AddJsonOptions(options => {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                // options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                // options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.AddRabbitMQClient("messaging");

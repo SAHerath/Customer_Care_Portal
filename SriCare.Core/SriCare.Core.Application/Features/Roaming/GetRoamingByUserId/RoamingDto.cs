@@ -6,5 +6,5 @@ public class RoamingDto {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public bool Activate { get; set; }
-    public IEnumerable<RoamingPlan> ActivatedPlans { get; set; }
+    public List<RoamingPlanDto> ActivatedPlans { get; set; }
 }

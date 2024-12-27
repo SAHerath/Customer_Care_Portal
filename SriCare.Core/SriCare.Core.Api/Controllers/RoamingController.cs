@@ -2,6 +2,7 @@ using Common.Utils.Account;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SriCare.Core.Application.Features.Roaming.ActivateRoamingPackage;
 using SriCare.Core.Application.Features.Roaming.GetRoamingByUserId;
 using SriCare.Core.Application.Features.Roaming.UpdateRoamingStatus;
 
@@ -22,12 +23,20 @@ public class RoamingController(IMediator bus, ILogger<RoamingController> logger,
         return Ok(await bus.Send(new GetRoamingByUserIdQuery { UserId = userIdentity.Id}));
     }
 
-    [HttpPatch("{id}/activate")]
-    public async Task<IActionResult> UpdateActivateFlag(Guid id, [FromBody] UpdateRoamingStatusCommand command)
+    [HttpPatch("{roamingId}/activate")]
+    public async Task<IActionResult> UpdateActivateFlag(Guid roamingId, [FromBody] UpdateRoamingStatusCommand command)
     {
         logger.LogInformation("Update Roaming Activation");
-        command.Id = id;
+        command.Id = roamingId;
         await bus.Send(command);
+        return Ok();
+    }
+
+    [HttpPost("{roamingId}/activate-package/{packageId}")]
+    public async Task<IActionResult> ActivateRoamingPackage(Guid roamingId, Guid packageId)
+    {
+        logger.LogInformation("Activate roaming package");
+        await bus.Send(new ActivateRoamingPackageCommand { RoamingId = roamingId, PackageId = packageId });
         return Ok();
     }
 

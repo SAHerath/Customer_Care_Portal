@@ -7,6 +7,8 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly CoreDBContext dbContext;
         private IRoamingRepository roaming = null;
+        private IActivePlanRepository activePlans = null;
+        private IRoamingPlanRepository roamingPlans = null;
 
         public UnitOfWork(CoreDBContext dbContext)
         {
@@ -14,6 +16,8 @@ public class UnitOfWork : IUnitOfWork
         }
 
         public IRoamingRepository Roaming => roaming ??= new RoamingRepository(dbContext);
+        public IActivePlanRepository ActivePlans => activePlans ??= new ActivePlanRepository(dbContext);
+        public IRoamingPlanRepository RoamingPlans => roamingPlans ??= new RoamingPlanRepository(dbContext);
 
         public void Save()
         {

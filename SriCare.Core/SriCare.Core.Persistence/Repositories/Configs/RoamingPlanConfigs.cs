@@ -9,5 +9,6 @@ internal class RoamingPlanConfigs : IEntityTypeConfiguration<RoamingPlan>
     public void Configure(EntityTypeBuilder<RoamingPlan> builder)
     {
         builder.HasKey(x => x.Id);
+        builder.HasOne(x => x.Plan).WithMany(x => x.RoamingPlans).HasForeignKey(x => x.ActivePlanId).IsRequired();
     }
 }

@@ -19,12 +19,23 @@ public class GetRoamingByUserIdQueryHandler : IRequestHandler<GetRoamingByUserId
         var roaming = await uow.Roaming.GetByUserIdAsync(request.UserId) ??
              throw new CustomValidationException(new ErrorModel("GetRoamingByUserId", $"User is not found for given id {request.UserId}"));
 
-        return new RoamingDto{
+        var dto =  new RoamingDto{
                 Id = roaming.Id,
                 UserId = roaming.UserId,
                 Activate = roaming.Activate,
-                ActivatedPlans = roaming.RoamingPlans,
+                ActivatedPlans = roaming.RoamingPlans.Select(i => new RoamingPlanDto{
+                    Id = i.Id,
+                    RoamingId = i.RoamingId,
+                    ActivePlanId = i.ActivePlanId,
+                    PlanName = i.PlanName,
+                    Price = i.Price,
+                    Validity = i.Validity,
+                    SMSQuota = i.SMSQuota,
+                    CallQuota = i.CallQuota,
+                    DataQuota = i.DataQuota,
+                }).ToList(),
         };
-        
+
+        return dto;
     }
 }
