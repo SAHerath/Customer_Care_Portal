@@ -1,0 +1,182 @@
+[
+  {
+    "PlanName": "Basic Roaming Plan",
+    "Type": "Roaming",
+    "Price": 9.99,
+    "Validity": "2025-01-25T00:00:00Z",
+    "SMSQuota": 50,
+    "CallQuota": 100,
+    "DataQuota": 500
+  },
+  {
+    "PlanName": "Standard Roaming Plan",
+    "Type": "Roaming",
+    "Price": 19.99,
+    "Validity": "2025-06-15T00:00:00Z",
+    "SMSQuota": 100,
+    "CallQuota": 300,
+    "DataQuota": 1024
+  },
+  {
+    "PlanName": "Premium Roaming Plan",
+    "Type": "Roaming",
+    "Price": 29.99,
+    "Validity": "2025-12-31T00:00:00Z",
+    "SMSQuota": 200,
+    "CallQuota": 500,
+    "DataQuota": 2048
+  },
+  {
+    "PlanName": "Basic General Plan",
+    "Type": "General",
+    "Price": 5.99,
+    "Validity": "2025-01-01T00:00:00Z",
+    "SMSQuota": 20,
+    "CallQuota": 50,
+    "DataQuota": 250
+  },
+  {
+    "PlanName": "Family General Plan",
+    "Type": "General",
+    "Price": 15.99,
+    "Validity": "2025-05-10T00:00:00Z",
+    "SMSQuota": 80,
+    "CallQuota": 200,
+    "DataQuota": 750
+  },
+  {
+    "PlanName": "Business Roaming Plan",
+    "Type": "Roaming",
+    "Price": 39.99,
+    "Validity": "2025-11-30T00:00:00Z",
+    "SMSQuota": 300,
+    "CallQuota": 700,
+    "DataQuota": 3072
+  },
+  {
+    "PlanName": "Economy Roaming Plan",
+    "Type": "Roaming",
+    "Price": 14.99,
+    "Validity": "2025-03-20T00:00:00Z",
+    "SMSQuota": 75,
+    "CallQuota": 150,
+    "DataQuota": 768
+  },
+  {
+    "PlanName": "Silver General Plan",
+    "Type": "General",
+    "Price": 10.99,
+    "Validity": "2025-02-15T00:00:00Z",
+    "SMSQuota": 40,
+    "CallQuota": 100,
+    "DataQuota": 500
+  },
+  {
+    "PlanName": "Gold General Plan",
+    "Type": "General",
+    "Price": 25.99,
+    "Validity": "2025-08-05T00:00:00Z",
+    "SMSQuota": 150,
+    "CallQuota": 400,
+    "DataQuota": 1500
+  },
+  {
+    "PlanName": "Traveler Roaming Plan",
+    "Type": "Roaming",
+    "Price": 19.49,
+    "Validity": "2025-04-01T00:00:00Z",
+    "SMSQuota": 90,
+    "CallQuota": 250,
+    "DataQuota": 900
+  },
+  {
+    "PlanName": "Explorer Roaming Plan",
+    "Type": "Roaming",
+    "Price": 24.99,
+    "Validity": "2025-07-20T00:00:00Z",
+    "SMSQuota": 120,
+    "CallQuota": 300,
+    "DataQuota": 1200
+  },
+  {
+    "PlanName": "Ultimate Roaming Plan",
+    "Type": "Roaming",
+    "Price": 49.99,
+    "Validity": "2025-12-31T00:00:00Z",
+    "SMSQuota": 500,
+    "CallQuota": 1000,
+    "DataQuota": 5000
+  },
+  {
+    "PlanName": "Starter General Plan",
+    "Type": "General",
+    "Price": 3.99,
+    "Validity": "2025-03-01T00:00:00Z",
+    "SMSQuota": 10,
+    "CallQuota": 30,
+    "DataQuota": 100
+  },
+  {
+    "PlanName": "Family Roaming Plan",
+    "Type": "Roaming",
+    "Price": 34.99,
+    "Validity": "2025-09-10T00:00:00Z",
+    "SMSQuota": 250,
+    "CallQuota": 600,
+    "DataQuota": 2500
+  },
+  {
+    "PlanName": "Youth General Plan",
+    "Type": "General",
+    "Price": 9.49,
+    "Validity": "2025-06-30T00:00:00Z",
+    "SMSQuota": 30,
+    "CallQuota": 80,
+    "DataQuota": 300
+  },
+  {
+    "PlanName": "Corporate General Plan",
+    "Type": "General",
+    "Price": 29.99,
+    "Validity": "2025-10-15T00:00:00Z",
+    "SMSQuota": 200,
+    "CallQuota": 500,
+    "DataQuota": 2000
+  },
+  {
+    "PlanName": "Adventure Roaming Plan",
+    "Type": "Roaming",
+    "Price": 44.99,
+    "Validity": "2025-11-01T00:00:00Z",
+    "SMSQuota": 400,
+    "CallQuota": 800,
+    "DataQuota": 4000
+  },
+  {
+    "PlanName": "Economy General Plan",
+    "Type": "General",
+    "Price": 6.99,
+    "Validity": "2025-04-25T00:00:00Z",
+    "SMSQuota": 25,
+    "CallQuota": 60,
+    "DataQuota": 200
+  },
+  {
+    "PlanName": "Platinum General Plan",
+    "Type": "General",
+    "Price": 35.99,
+    "Validity": "2025-12-15T00:00:00Z",
+    "SMSQuota": 250,
+    "CallQuota": 600,
+    "DataQuota": 2500
+  },
+  {
+    "PlanName": "Super Saver Roaming Plan",
+    "Type": "Roaming",
+    "Price": 12.99,
+    "Validity": "2025-02-28T00:00:00Z",
+    "SMSQuota": 60,
+    "CallQuota": 120,
+    "DataQuota": 600
+  }
+]
