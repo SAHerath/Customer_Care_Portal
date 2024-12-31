@@ -5,6 +5,8 @@ using SriCare.Auth.Swagger;
 using SriCare.Auth.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using SriCare.Auth.interfaces;
+using SriCare.Auth.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +51,7 @@ builder.Services.AddAuthentication(options =>{
 // .AddBearerToken(IdentityConstants.BearerScheme);
 
 builder.Services.AddAuthorization();
+builder.Services.AddSingleton<ICoreQueueClient, CoreQueueClient>();
 
 var app = builder.Build();
 

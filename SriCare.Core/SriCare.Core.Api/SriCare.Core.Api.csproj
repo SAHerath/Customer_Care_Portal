@@ -21,6 +21,7 @@
     <ProjectReference Include="../../Common.Utils/Common.Utils.csproj" />
     <ProjectReference Include="../../SriCare.ServiceDefaults/SriCare.ServiceDefaults.csproj" />
     <ProjectReference Include="../SriCare.Core.Application/SriCare.Core.Application.csproj" />
+    <ProjectReference Include="../SriCare.Core.Infrastructure/SriCare.Core.Infrastructure.csproj" />
     <ProjectReference Include="../SriCare.Core.Persistence/SriCare.Core.Persistence.csproj" />
   </ItemGroup>
 
