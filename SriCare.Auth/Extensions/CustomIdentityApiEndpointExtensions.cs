@@ -1,25 +1,21 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Text.Json;
+using Common.Utils.Messages.Core;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SriCare.Auth.Dtos;
 using SriCare.Auth.Dtos.User;
+using SriCare.Auth.interfaces;
 using SriCare.Auth.Models;
 
 namespace SriCare.Auth.Extensions;
@@ -55,7 +51,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
         // NOTE: We cannot inject UserManager<TUser> directly because the TUser generic parameter is currently unsupported by RDG.
         // https://github.com/dotnet/aspnetcore/issues/47338
         routeGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>>
-            ([FromBody] CreateUserDto registration, HttpContext context, [FromServices] IServiceProvider sp, RabbitMQ.Client.IConnection connection) =>
+            ([FromBody] CreateUserDto registration, HttpContext context, [FromServices] IServiceProvider sp, ICoreQueueClient client) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
 
@@ -89,21 +85,23 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
                 return CreateValidationProblem(result);
             }
 
-            var channel = connection.CreateModel();
-            channel.QueueDeclare(queue: "roamingEvents",
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
+            // var channel = connection.CreateModel();
+            // channel.QueueDeclare(queue: "roamingEvents",
+            //          durable: false,
+            //          exclusive: false,
+            //          autoDelete: false,
+            //          arguments: null);
 
-            var bodyMessage = new {UserId = user.Id, Email = user.Email, PhoneNumber =user.PhoneNumber};
-            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(bodyMessage));
+            // var bodyMessage = new {UserId = user.Id, Email = user.Email, PhoneNumber =user.PhoneNumber};
+            // var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(bodyMessage));
 
-            channel.BasicPublish(exchange: string.Empty,
-                     routingKey: "roamingEvents",
- 					 mandatory: false,
-                     basicProperties: null,
-                     body: body);
+            // channel.BasicPublish(exchange: string.Empty,
+            //          routingKey: "roamingEvents",
+ 			// 		 mandatory: false,
+            //          basicProperties: null,
+            //          body: body);
+
+            client.SendMessage(new RoamingMessage {UserId = new Guid(user.Id), Email = user.Email, PhoneNumber = user.PhoneNumber});
 
             await SendConfirmationEmailAsync(user, userManager, context, email);
             return TypedResults.Ok();

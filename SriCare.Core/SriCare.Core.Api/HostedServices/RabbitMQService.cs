@@ -1,6 +1,6 @@
 
-using System.Text;
-using System.Text.Json;
+using Common.Utils.Messages;
+using Common.Utils.Messages.Core;
 using MediatR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -58,14 +58,16 @@ public class RabbitMQService : IHostedService
         using var scope = _serviceProvider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        var message = JsonSerializer.Deserialize<RoamingEvent>(Encoding.UTF8.GetString(args.Body.ToArray()));
-        _logger.LogInformation("New user sing-up retrieved from the auth service at {now}. Email Address: {text}", DateTime.Now, message.Email);
+        var message = MessageBuilder.GetMessage(args.Body.ToArray());
 
-        var command = new CreateRoamingCommand{
-            UserId = message.UserId,
-            Email = message.Email,
-        };
+        if(message.Type == typeof(RoamingMessage).Name){
+            var msg = message.Convert<RoamingMessage>();
+            var command = new CreateRoamingCommand {
+                UserId = msg.UserId,
+                Email = msg.Email,
+            };
 
-        await mediator.Send(command);
+            await mediator.Send(command);
+        }
     }
 }

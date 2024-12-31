@@ -22,9 +22,14 @@ var coreService = builder.AddProject<Projects.SriCare_Core_Api>("coreService")
                     .WaitFor(coreDB)
                     .WaitFor(messaging);
 
+var notificationService = builder.AddProject<Projects.SriCare_Notification_Api>("notificationService")
+                    .WithReference(messaging)
+                    .WaitFor(messaging);
+
 // Configure API Gateway
 var apiGateway = builder.AddProject<Projects.SriCare_ApiGateway>("apigateway")
     .WithReference(authService)
-    .WithReference(coreService);
+    .WithReference(coreService)
+    .WithReference(notificationService);
 
 builder.Build().Run();
