@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using Common.Utils.Messages.Auth;
 using Common.Utils.Messages.Core;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -42,6 +43,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
         var bearerTokenOptions = endpoints.ServiceProvider.GetRequiredService<IOptionsMonitor<BearerTokenOptions>>();
         var emailSender = endpoints.ServiceProvider.GetRequiredService<IEmailSender<TUser>>();
         var linkGenerator = endpoints.ServiceProvider.GetRequiredService<LinkGenerator>();
+        var gatewayLink = Environment.GetEnvironmentVariable("GATEWAY_URL");
+        var redirectLink = Environment.GetEnvironmentVariable("REDIRECT_URL");
 
         // We'll figure out a unique endpoint name based on the final route pattern during endpoint generation.
         string? confirmEmailEndpointName = null;
@@ -51,7 +54,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
         // NOTE: We cannot inject UserManager<TUser> directly because the TUser generic parameter is currently unsupported by RDG.
         // https://github.com/dotnet/aspnetcore/issues/47338
         routeGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>>
-            ([FromBody] CreateUserDto registration, HttpContext context, [FromServices] IServiceProvider sp, ICoreQueueClient client) =>
+            ([FromBody] CreateUserDto registration, HttpContext context, [FromServices] IServiceProvider sp, ICoreQueueClient client, INotificationQueueClient notificationClient) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
 
@@ -103,7 +106,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
 
             client.SendMessage(new RoamingMessage {UserId = new Guid(user.Id), Email = user.Email, PhoneNumber = user.PhoneNumber});
 
-            await SendConfirmationEmailAsync(user, userManager, context, email);
+            await SendConfirmationEmailAsync(user, userManager, context, email, notificationClient);
             return TypedResults.Ok();
         });
 
@@ -155,8 +158,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
         //     var newPrincipal = await signInManager.CreateUserPrincipalAsync(user);
         //     return TypedResults.SignIn(newPrincipal, authenticationScheme: IdentityConstants.BearerScheme);
         // });
-
-        routeGroup.MapGet("/confirmEmail", async Task<Results<ContentHttpResult, UnauthorizedHttpResult>>
+        
+        routeGroup.MapGet("/confirmEmail", async Task<Results<RedirectHttpResult, UnauthorizedHttpResult>>
             ([FromQuery] string userId, [FromQuery] string code, [FromQuery] string? changedEmail, [FromServices] IServiceProvider sp) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
@@ -198,8 +201,9 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
                 return TypedResults.Unauthorized();
             }
 
-            return TypedResults.Text("Thank you for confirming your email.");
+            return TypedResults.Redirect(redirectLink, true, true);
         })
+        .ExcludeFromDescription()
         .Add(endpointBuilder =>
         {
             var finalPattern = ((RouteEndpointBuilder)endpointBuilder).RoutePattern.RawText;
@@ -208,7 +212,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
         });
 
         routeGroup.MapPost("/resendConfirmationEmail", async Task<Ok>
-            ([FromBody] ResendConfirmationEmailRequest resendRequest, HttpContext context, [FromServices] IServiceProvider sp) =>
+            ([FromBody] ResendConfirmationEmailRequest resendRequest, HttpContext context, [FromServices] IServiceProvider sp, INotificationQueueClient notificationClient) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
             if (await userManager.FindByEmailAsync(resendRequest.Email) is not { } user)
@@ -216,12 +220,12 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
                 return TypedResults.Ok();
             }
 
-            await SendConfirmationEmailAsync(user, userManager, context, resendRequest.Email);
+            await SendConfirmationEmailAsync(user, userManager, context, resendRequest.Email, notificationClient);
             return TypedResults.Ok();
         });
 
         routeGroup.MapPost("/forgotPassword", async Task<Results<Ok, ValidationProblem>>
-            ([FromBody] ForgotPasswordRequest resetRequest, [FromServices] IServiceProvider sp) =>
+            ([FromBody] ForgotPasswordRequest resetRequest, [FromServices] IServiceProvider sp, INotificationQueueClient notificationClient) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
             var user = await userManager.FindByEmailAsync(resetRequest.Email);
@@ -231,7 +235,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
                 var code = await userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                await emailSender.SendPasswordResetCodeAsync(user, resetRequest.Email, HtmlEncoder.Default.Encode(code));
+                var confirmEmailUrl = $"{redirectLink}/reset-password?code={code}";
+                notificationClient.SendMessage(new ForgotPassword {Email = resetRequest.Email, Body = HtmlEncoder.Default.Encode(confirmEmailUrl)});
             }
 
             // Don't reveal that the user does not exist or is not confirmed, so don't return a 200 if we would have
@@ -368,7 +373,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
         });
 
         accountGroup.MapPost("/info", async Task<Results<Ok<InfoResponseDto>, ValidationProblem, NotFound>>
-            (ClaimsPrincipal claimsPrincipal, [FromBody] InfoRequest infoRequest, HttpContext context, [FromServices] IServiceProvider sp) =>
+            (ClaimsPrincipal claimsPrincipal, [FromBody] InfoRequest infoRequest, HttpContext context, [FromServices] IServiceProvider sp, INotificationQueueClient notificationClient) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
             if (await userManager.GetUserAsync(claimsPrincipal) is not { } user)
@@ -402,14 +407,14 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
 
                 if (email != infoRequest.NewEmail)
                 {
-                    await SendConfirmationEmailAsync(user, userManager, context, infoRequest.NewEmail, isChange: true);
+                    await SendConfirmationEmailAsync(user, userManager, context, infoRequest.NewEmail, notificationClient, isChange: true);
                 }
             }
 
             return TypedResults.Ok(await CreateInfoResponseAsync(user, userManager));
         });
 
-        async Task SendConfirmationEmailAsync(TUser user, UserManager<TUser> userManager, HttpContext context, string email, bool isChange = false)
+        async Task SendConfirmationEmailAsync(TUser user, UserManager<TUser> userManager, HttpContext context, string email, INotificationQueueClient notificationClient, bool isChange = false)
         {
             if (confirmEmailEndpointName is null)
             {
@@ -434,10 +439,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
                 routeValues.Add("changedEmail", email);
             }
 
-            var confirmEmailUrl = linkGenerator.GetUriByName(context, confirmEmailEndpointName, routeValues)
-                ?? throw new NotSupportedException($"Could not find endpoint named '{confirmEmailEndpointName}'.");
-
-            await emailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(confirmEmailUrl));
+            var confirmEmailUrl = $"{gatewayLink}/auth/confirmEmail?userId={userId}&code={code}";
+            notificationClient.SendMessage(new EmailConfirmation {Email = email, Body = HtmlEncoder.Default.Encode(confirmEmailUrl)});
         }
 
         return new IdentityEndpointsConventionBuilder(routeGroup);

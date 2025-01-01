@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
   </ItemGroup>
 
@@ -14,6 +15,7 @@
     <ProjectReference Include="../../Common.Utils/Common.Utils.csproj" />
     <ProjectReference Include="../../SriCare.ServiceDefaults/SriCare.ServiceDefaults.csproj" />
     <ProjectReference Include="../SriCare.Notification.Application/SriCare.Notification.Application.csproj" />
+    <ProjectReference Include="../SriCare.Notification.Infra/SriCare.Notification.Infra.csproj" />
   </ItemGroup>
 
 </Project>

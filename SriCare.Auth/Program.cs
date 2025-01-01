@@ -52,6 +52,7 @@ builder.Services.AddAuthentication(options =>{
 
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<ICoreQueueClient, CoreQueueClient>();
+builder.Services.AddSingleton<INotificationQueueClient, NotificationQueueClient>();
 
 var app = builder.Build();
 
