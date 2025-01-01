@@ -1,5 +1,8 @@
 using Common.Utils;
 using Common.Utils.Middlewares;
+using SriCare.Notification.Api.HostedServices;
+using SriCare.Notification.Api.MediatR;
+using SriCare.Notification.Infra;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,11 @@ builder.AddServiceDefaults();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.AddRabbitMQClient("messaging");
 builder.Services.AddCommonUtilsConfigurations();
+builder.Services.AddInfraConfigurations(builder.Configuration);
+builder.Services.AddMediatRConfiguration();
+builder.Services.AddHostedService<NotificationsMQService>();
 
 var app = builder.Build();
 

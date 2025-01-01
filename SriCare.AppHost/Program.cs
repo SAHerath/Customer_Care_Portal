@@ -12,6 +12,8 @@ var authDB = postgresServer.AddDatabase("authdb");
 var authService = builder.AddProject<Projects.SriCare_Auth>("authService")
                     .WithReference(authDB)
                     .WithReference(messaging)
+                    .WithEnvironment("GATEWAY_URL","https://localhost:7155")
+                    .WithEnvironment("REDIRECT_URL","https://www.google.com")
                     .WaitFor(authDB)
                     .WaitFor(messaging);
 
