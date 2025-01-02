@@ -200,8 +200,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions{
             {
                 return TypedResults.Unauthorized();
             }
-
-            return TypedResults.Redirect(redirectLink, true, true);
+            
+            return TypedResults.Redirect($"{redirectLink}/login", true, true);
         })
         .ExcludeFromDescription()
         .Add(endpointBuilder =>

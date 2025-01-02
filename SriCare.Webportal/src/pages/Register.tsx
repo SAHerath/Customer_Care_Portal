@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -7,12 +7,11 @@ import {
   Paper,
   CircularProgress,
   ThemeProvider,
-} from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
-import { postRequest } from '../services/authService';
-import { theme } from '../services/customColor';
-import cover from '../assets/abstract.png';
-
+} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import { postRequest } from "../services/authService";
+import { theme } from "../services/customColor";
+import cover from "../assets/abstract.png";
 
 type FormData = {
   firstName: string;
@@ -23,13 +22,12 @@ type FormData = {
 };
 
 const Register: React.FC = () => {
-
   const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,15 +38,15 @@ const Register: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  
-    const response = await postRequest('/register', formData);
-  
+
+    const response = await postRequest("auth/register", formData);
+
     if (response) {
-      console.log('Register successful:', response.data);
-      navigate('/login');
+      console.log("Register successful:", response.data);
+      navigate("/login");
     } else {
-      console.log('Register failed');
-      setError('Invalid email or mismatch password');
+      console.log("Register failed");
+      setError("Invalid email or mismatch password");
     }
     setLoading(false);
   };
@@ -57,7 +55,7 @@ const Register: React.FC = () => {
     const { name, value } = e.target;
     console.log(name, value);
     setFormData((prevState) => ({ ...prevState, [name]: value }));
-  }; 
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -68,13 +66,13 @@ const Register: React.FC = () => {
         height="100vh"
         // bgcolor="palegreen"
         sx={{
-          backgroundImage:`url(${cover})`,
+          backgroundImage: `url(${cover})`,
           backgroundRepeat: "repeat",
         }}
       >
         <Paper
           elevation={3}
-          sx={{ padding: '30px', maxWidth: '400px', width: '100%' }}
+          sx={{ padding: "30px", maxWidth: "400px", width: "100%" }}
         >
           <Typography variant="h5" textAlign="center" marginBottom={3}>
             SriCare Login
@@ -148,13 +146,22 @@ const Register: React.FC = () => {
                 disabled={loading}
                 fullWidth
               >
-                {loading ? <CircularProgress size={24} color="inherit" /> : 'Register'}
+                {loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Register"
+                )}
               </Button>
             </Box>
           </form>
-          <Typography color="textSecondary" textAlign="center" variant="body2" marginTop={2}>
-            Already have an account? {' '}
-            <Link to="/login" style={{ textDecoration: 'none', color: 'blue' }}>
+          <Typography
+            color="textSecondary"
+            textAlign="center"
+            variant="body2"
+            marginTop={2}
+          >
+            Already have an account?{" "}
+            <Link to="/login" style={{ textDecoration: "none", color: "blue" }}>
               Log in
             </Link>
           </Typography>

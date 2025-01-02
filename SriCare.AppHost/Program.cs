@@ -3,7 +3,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // var userName = builder.AddParameter("userName", secret: true);
 var password = builder.AddParameter("password", secret: true);
-var postgresServer = builder.AddPostgres("postgresServer", password).WithDataVolume().WithPgAdmin();
+var postgresServer = builder.AddPostgres("postgresServer", password)
+                        .WithDataVolume();
+                        // .WithPgAdmin();
 
 var messaging = builder.AddRabbitMQ("messaging");
 
@@ -13,7 +15,7 @@ var authService = builder.AddProject<Projects.SriCare_Auth>("authService")
                     .WithReference(authDB)
                     .WithReference(messaging)
                     .WithEnvironment("GATEWAY_URL","https://localhost:7155")
-                    .WithEnvironment("REDIRECT_URL","https://www.google.com")
+                    .WithEnvironment("REDIRECT_URL","https://localhost:5000")
                     .WaitFor(authDB)
                     .WaitFor(messaging);
 
@@ -32,6 +34,13 @@ var notificationService = builder.AddProject<Projects.SriCare_Notification_Api>(
 var apiGateway = builder.AddProject<Projects.SriCare_ApiGateway>("apigateway")
     .WithReference(authService)
     .WithReference(coreService)
-    .WithReference(notificationService);
+    .WithReference(notificationService)
+    .WithExternalHttpEndpoints();
+
+builder.AddNpmApp("webPortal","../SriCare.Webportal","dev")
+    .WithReference(apiGateway)
+    .WaitFor(apiGateway)
+    .WithHttpsEndpoint(port: 5000, env: "PORT",targetPort: 5173)
+    .WithExternalHttpEndpoints();
 
 builder.Build().Run();

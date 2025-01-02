@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -7,11 +7,11 @@ import {
   Paper,
   CircularProgress,
   ThemeProvider,
-} from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
-import { postRequest, getCurrentUser } from '../services/authService';
-import { theme } from '../services/customColor';
-import cover from '../assets/abstract.png';
+} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import { postRequest, getCurrentUser } from "../services/authService";
+import { theme } from "../services/customColor";
+import cover from "../assets/abstract.png";
 
 type FormData = {
   email: string;
@@ -19,10 +19,9 @@ type FormData = {
 };
 
 const Login: React.FC = () => {
-
   const [formData, setFormData] = useState<FormData>({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,17 +32,17 @@ const Login: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  
-    const response = await postRequest('/login', formData);
-  
+
+    const response = await postRequest("auth/login", formData);
+
     if (response) {
-      console.log('Login successful:', response);
+      console.log("Login successful:", response);
       getCurrentUser();
-      
-      navigate('/dashboard');
+
+      navigate("/dashboard");
     } else {
-      console.log('Login failed');
-      setError('Invalid email or password');
+      console.log("Login failed");
+      setError("Invalid email or password");
     }
     setLoading(false);
   };
@@ -52,8 +51,7 @@ const Login: React.FC = () => {
     const { name, value } = e.target;
     console.log(name, value);
     setFormData((prevState) => ({ ...prevState, [name]: value }));
-  };  
-
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -64,13 +62,13 @@ const Login: React.FC = () => {
         height="100vh"
         // bgcolor="palegreen"
         sx={{
-          backgroundImage:`url(${cover})`,
+          backgroundImage: `url(${cover})`,
           backgroundRepeat: "repeat",
         }}
       >
         <Paper
           elevation={3}
-          sx={{ padding: '30px', maxWidth: '400px', width: '100%' }}
+          sx={{ padding: "30px", maxWidth: "400px", width: "100%" }}
         >
           <Typography variant="h5" textAlign="center" marginBottom={3}>
             SriCare Login
@@ -111,19 +109,36 @@ const Login: React.FC = () => {
                 disabled={loading}
                 fullWidth
               >
-                {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
+                {loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Login"
+                )}
               </Button>
             </Box>
           </form>
-          <Typography color="textSecondary" textAlign="center" variant="body2" marginTop={2}>
-            New user? {' '}  
-            <Link to="/register" style={{ textDecoration: 'none', color: 'blue' }}>
+          <Typography
+            color="textSecondary"
+            textAlign="center"
+            variant="body2"
+            marginTop={2}
+          >
+            New user?{" "}
+            <Link
+              to="/register"
+              style={{ textDecoration: "none", color: "blue" }}
+            >
               Register
             </Link>
           </Typography>
-          <Typography color="textSecondary" textAlign="center" variant="body2" marginTop={2}>
-            Forgot password? {' '}  
-            <Link to="/reset" style={{ textDecoration: 'none', color: 'blue' }}>
+          <Typography
+            color="textSecondary"
+            textAlign="center"
+            variant="body2"
+            marginTop={2}
+          >
+            Forgot password?{" "}
+            <Link to="/reset" style={{ textDecoration: "none", color: "blue" }}>
               Reset Password
             </Link>
           </Typography>

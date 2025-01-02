@@ -46,7 +46,16 @@ builder.AddNpgsqlDbContext<CoreDBContext>("coredb", configureSettings:settings =
 builder.Services.AddEFConfigurations();
 builder.Services.AddHostedService<RabbitMQService>();
 
+builder.Services.AddCors(options =>{
+    options.AddPolicy("customPolicy",policy => {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+app.UseCors("customPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
