@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Common.Utils/Common.Utils.csproj" />
+    <ProjectReference Include="../../SriCare.ServiceDefaults/SriCare.ServiceDefaults.csproj" />
+    <ProjectReference Include="../SriCare.Core.Application/SriCare.Core.Application.csproj" />
+    <ProjectReference Include="../SriCare.Core.Infrastructure/SriCare.Core.Infrastructure.csproj" />
+    <ProjectReference Include="../SriCare.Core.Persistence/SriCare.Core.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -10,7 +10,17 @@ builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
     .AddServiceDiscoveryDestinationResolver();
 
+builder.Services.AddCors(options =>{
+    options.AddPolicy("default",policy => {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("default");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
