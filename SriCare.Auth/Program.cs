@@ -54,7 +54,16 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<ICoreQueueClient, CoreQueueClient>();
 builder.Services.AddSingleton<INotificationQueueClient, NotificationQueueClient>();
 
+builder.Services.AddCors(options =>{
+    options.AddPolicy("customPolicy",policy => {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+app.UseCors("customPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -11,7 +11,7 @@ builder.Services.AddReverseProxy()
     .AddServiceDiscoveryDestinationResolver();
 
 builder.Services.AddCors(options =>{
-    options.AddPolicy("default",policy => {
+    options.AddPolicy("customPolicy",policy => {
         policy.AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>{
 
 var app = builder.Build();
 
-app.UseCors("default");
+app.UseCors("customPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
