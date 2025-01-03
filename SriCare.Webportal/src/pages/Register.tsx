@@ -18,6 +18,7 @@ type FormData = {
   firstName: string;
   lastName: string;
   email: string;
+  phoneNumber: string;
   password: string;
   confirmPassword: string;
 };
@@ -28,6 +29,7 @@ const Register: React.FC = () => {
     firstName: "",
     lastName: "",
     email: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
@@ -133,6 +135,17 @@ const Register: React.FC = () => {
               type="email"
               name="email"
               value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              fullWidth
+              label="Contact Number"
+              variant="outlined"
+              margin="normal"
+              type="tel"
+              name="phoneNumber"
+              value={formData.phoneNumber}
               onChange={handleChange}
               required
             />
