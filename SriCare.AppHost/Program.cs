@@ -26,6 +26,11 @@ var coreService = builder.AddProject<Projects.SriCare_Core_Api>("coreService")
                     .WaitFor(coreDB)
                     .WaitFor(messaging);
 
+var billingService = builder.AddProject<Projects.SriCare_Billing_Api>("billingService")
+                    .WithReference(messaging)
+                    .WaitFor(messaging)
+                    .WithReference(coreService);
+
 var notificationService = builder.AddProject<Projects.SriCare_Notification_Api>("notificationService")
                     .WithReference(messaging)
                     .WaitFor(messaging);
@@ -34,6 +39,7 @@ var notificationService = builder.AddProject<Projects.SriCare_Notification_Api>(
 var apiGateway = builder.AddProject<Projects.SriCare_ApiGateway>("apigateway")
     .WithReference(authService)
     .WithReference(coreService)
+    .WithReference(billingService)
     .WithReference(notificationService)
     .WithExternalHttpEndpoints();
 
