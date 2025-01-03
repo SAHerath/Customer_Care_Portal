@@ -3,6 +3,7 @@ using Carter;
 using Common.Utils.Account;
 using Common.Utils.Exceptions;
 using MediatR;
+using SriCare.Billing.Application.Features.Billing.GenerateBill;
 using SriCare.Billing.Application.Features.Billing.GetCurrentBill;
 using SriCare.Billing.Application.Features.Billing.GetPastBills;
 using SriCare.Billing.Application.Features.Billing.GetPaymentHistory;
@@ -39,7 +40,13 @@ namespace SriCare.Billing.Api.Features.Billing
             .Produces<GetPaymentHistoryListDto>((int)HttpStatusCode.OK)
             .Produces<ErrorModel>((int)HttpStatusCode.BadRequest);
 
-            
+            app.MapPost("/generate-bill", async(ISender sender) => {
+                var command = new GenerateBillCommand();
+                await sender.Send(command);
+                return Results.Ok();
+            })
+            .Produces((int)HttpStatusCode.OK)
+            .Produces<ErrorModel>((int)HttpStatusCode.BadRequest);
         }
     }
 }

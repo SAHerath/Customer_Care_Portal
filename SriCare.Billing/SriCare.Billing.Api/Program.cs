@@ -7,6 +7,7 @@ using Carter;
 using SriCare.Billing.Api.MediatR;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
+using SriCare.Billing.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 });
 builder.Services.AddAuthorization();
 builder.Services.AddCommonUtilsConfigurations();
+builder.Services.AddInfrastructureConfigurations();
 
 builder.Services.AddCors(options =>{
     options.AddPolicy("customPolicy",policy => {
