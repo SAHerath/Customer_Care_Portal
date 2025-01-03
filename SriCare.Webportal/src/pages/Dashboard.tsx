@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link as LinkRouter, useNavigate } from "react-router-dom";
+import { logout, getCurrentUser } from "../services/authService";
 import {
   Box,
   Typography,
@@ -16,6 +17,8 @@ import {
   ListItemText,
   IconButton,
   Badge,
+  Menu,
+  MenuItem,
   ThemeProvider,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -25,8 +28,24 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import { theme } from "../services/customColor";
 import Logo from "../assets/logo.png";
+// import Cover from "../assets/abstract.png";
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  const handleLogout = () => {
+    logout();
+    navigate('/login'); // Redirect to login
+    handleMenuClose();
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -119,11 +138,34 @@ const Dashboard: React.FC = () => {
                   size="large"
                   edge="end"
                   aria-label="account of current user"
+                  // aria-controls={menuId}
                   aria-haspopup="true"
+                  onClick={handleMenuOpen}
                   color="inherit"
                 >
                   <AccountCircle />
                 </IconButton>
+
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  sx={{marginTop: '0.5rem', marginLeft: '0.6rem',}}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+
               </Box>
 
 
