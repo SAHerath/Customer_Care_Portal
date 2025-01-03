@@ -14,6 +14,8 @@ import {
   ListItemIcon,
   ListItemButton,
   ListItemText,
+  IconButton,
+  Badge,
   ThemeProvider,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -87,17 +89,50 @@ const Dashboard: React.FC = () => {
         {/* Main Content */}
         <Box flex="1" display="flex" flexDirection="column">
           {/* Navbar */}
-          <AppBar position="sticky" sx={{ backgroundColor: '#1976d2' }}>
+          <AppBar position="sticky" sx={{ backgroundColor: '#9F774E' }}>
             <Toolbar>
-              <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              <Typography
+                variant="h6" noWrap component="div"
+                sx={{ display: { xs: 'none', sm: 'block' } }}
+              >
                 Dashboard
-            </Typography>
-          </Toolbar>
+              </Typography>
+
+              <Box sx={{ flexGrow: 1 }} />
+              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                  <Badge badgeContent={4} color="error">
+                    <MailIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  size="large"
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                >
+                  <Badge badgeContent={17} color="error">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-haspopup="true"
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              </Box>
+
+
+            </Toolbar>
           </AppBar>
 
           {/* Dashboard Content */}
           <Box padding={3} bgcolor="#f5f5f5" flex="1">
-
+            
             <Grid container spacing={3}>
               {/* Widget 1 */}
               <Grid item xs={12} sm={6} md={4}>
