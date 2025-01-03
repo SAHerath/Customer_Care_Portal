@@ -1,14 +1,45 @@
+using System.Net;
 using Carter;
+using Common.Utils.Account;
+using Common.Utils.Exceptions;
+using MediatR;
+using SriCare.Billing.Application.Features.Billing.GetCurrentBill;
+using SriCare.Billing.Application.Features.Billing.GetPastBills;
+using SriCare.Billing.Application.Features.Billing.GetPaymentHistory;
 
 namespace SriCare.Billing.Api.Features.Billing
 {
-    public class BillingModule : ICarterModule
+    public class BillingModule : CarterModule
     {
-        public void AddRoutes(IEndpointRouteBuilder app)
+        public BillingModule()
         {
-            app.MapGet("/currentBill",  () => {
-                return Results.Ok("this is test endpoint");
-            }).WithOpenApi();
+            this.RequireAuthorization();
+            this.IncludeInOpenApi();
+        }
+
+        public override void AddRoutes(IEndpointRouteBuilder app)
+        {
+            app.MapGet("/current-bill",  async (ISender sender, IUserIdentity user) => {
+                return  Results.Ok( await sender.Send(new GetCurrentBillQuery {UserId = user.Id}));
+            })
+            .Produces<GetCurrentBillDto>((int)HttpStatusCode.OK)
+            .Produces<ErrorModel>((int)HttpStatusCode.BadRequest);
+
+
+            app.MapGet("/past-bills", async(ISender sender, IUserIdentity user) => {
+                return Results.Ok(await sender.Send(new GetPastBillsQuery {UserId = user.Id}));
+            })
+            .Produces<GetPastBillsDto>((int)HttpStatusCode.OK)
+            .Produces<ErrorModel>((int)HttpStatusCode.BadRequest);
+
+
+            app.MapGet("/payment-history", async(ISender sender, IUserIdentity user) => {
+                return Results.Ok(await sender.Send(new GetPaymentHistoryQuery {UserId = user.Id}));
+            })
+            .Produces<GetPaymentHistoryListDto>((int)HttpStatusCode.OK)
+            .Produces<ErrorModel>((int)HttpStatusCode.BadRequest);
+
+            
         }
     }
 }

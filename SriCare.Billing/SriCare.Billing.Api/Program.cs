@@ -4,6 +4,9 @@ using Common.Utils;
 using Common.Utils.Middlewares;
 using SriCare.Billing.Api.Swagger;
 using Carter;
+using SriCare.Billing.Api.MediatR;
+using Microsoft.AspNetCore.Http.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +18,11 @@ builder.Services.AddOpenApi();
 builder.AddRabbitMQClient("messaging");
 builder.Services.AddSwaggerDoc();
 
-builder.Services.AddCarter();
+builder.Services.Configure<JsonOptions>(options => options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
+builder.Services.AddCarter();
+builder.Services.Configure<JsonOptions>(options => {options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());});
+builder.Services.AddMediatRConfiguration();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>{
     options.TokenValidationParameters = new TokenValidationParameters{
