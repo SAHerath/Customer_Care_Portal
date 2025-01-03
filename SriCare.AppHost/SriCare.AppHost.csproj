@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="../SriCare.ApiGateway/SriCare.ApiGateway.csproj" />
     <ProjectReference Include="../SriCare.Auth/SriCare.Auth.csproj" />
+    <ProjectReference Include="../SriCare.Billing/SriCare.Billing.Api/SriCare.Billing.Api.csproj" />
     <ProjectReference Include="../SriCare.Core/SriCare.Core.Api/SriCare.Core.Api.csproj" />
     <ProjectReference Include="../SriCare.Notification/SriCare.Notification.Api/SriCare.Notification.Api.csproj" />
   </ItemGroup>
