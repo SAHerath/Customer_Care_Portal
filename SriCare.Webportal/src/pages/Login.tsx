@@ -21,30 +21,29 @@ type FormData = {
 };
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
 
-  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    setStatus(null);
 
     const response = await postRequest("auth/login", formData);
 
     if (response) {
       console.log("Login successful:", response);
       getCurrentUser();
-
       navigate("/dashboard");
     } else {
       console.log("Login failed");
-      setError("Invalid email or password");
+      setStatus("Error: Invalid email or password");
     }
     setLoading(false);
   };
@@ -86,6 +85,16 @@ const Login: React.FC = () => {
           <Typography variant="h5" textAlign="center" marginBottom={2}>
             Login
           </Typography>
+          {status && (
+          <Typography
+            variant="body2"
+            textAlign="center"
+            marginBottom={1}
+            color={status.startsWith("Error") ? 'error' : 'info'}
+          >
+            {status}
+          </Typography>
+          )}
           <form onSubmit={handleLogin}>
             <TextField
               fullWidth
@@ -109,12 +118,7 @@ const Login: React.FC = () => {
               onChange={handleChange}
               required
             />
-            {error && (
-              <Typography color="error" variant="body2" marginTop={1}>
-                {error}
-              </Typography>
-            )}
-            <Box textAlign="center" marginTop={3}>
+            <Box textAlign="center" marginTop={2}>
               <Button
                 type="submit"
                 variant="contained"
@@ -130,6 +134,7 @@ const Login: React.FC = () => {
               </Button>
             </Box>
           </form>
+
           <Typography
             color="textSecondary"
             textAlign="center"
@@ -139,7 +144,7 @@ const Login: React.FC = () => {
             New user?{" "}
             <Link
               to="/register"
-              style={{ textDecoration: "none", color: "blue" }}
+              style={{ textDecoration: "none", color: "info" }}
             >
               Register
             </Link>
@@ -151,7 +156,7 @@ const Login: React.FC = () => {
             marginTop={2}
           >
             Forgot password?{" "}
-            <Link to="/reset" style={{ textDecoration: "none", color: "blue" }}>
+            <Link to="/forgot-password" style={{ textDecoration: "none", color: "info" }}>
               Reset Password
             </Link>
           </Typography>

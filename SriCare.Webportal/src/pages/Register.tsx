@@ -23,6 +23,7 @@ type FormData = {
 };
 
 const Register: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -31,14 +32,16 @@ const Register: React.FC = () => {
     confirmPassword: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const navigate = useNavigate();
+  const [status, setStatus] = useState<string | null>(null);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if(formData.password != formData.confirmPassword) {
+      setStatus("Error: Password missmatch.");
+      return;
+    }
     setLoading(true);
-    setError(null);
 
     const response = await postRequest("auth/register", formData);
 
@@ -47,7 +50,7 @@ const Register: React.FC = () => {
       navigate("/login");
     } else {
       console.log("Register failed");
-      setError("Invalid email or mismatch password");
+      setStatus("Error: Invalid email or mismatch password");
     }
     setLoading(false);
   };
@@ -89,6 +92,16 @@ const Register: React.FC = () => {
           <Typography variant="h5" textAlign="center" marginBottom={2}>
             Registration
           </Typography>
+          {status && (
+          <Typography
+            variant="body2"
+            textAlign="center"
+            marginBottom={1}
+            color={status.startsWith("Error") ? 'error' : 'info'}
+          >
+            {status}
+          </Typography>
+          )}
           <form onSubmit={handleRegister}>
             <TextField
               fullWidth
@@ -145,12 +158,7 @@ const Register: React.FC = () => {
               onChange={handleChange}
               required
             />
-            {error && (
-              <Typography color="error" variant="body2" marginTop={1}>
-                {error}
-              </Typography>
-            )}
-            <Box textAlign="center" marginTop={3}>
+            <Box textAlign="center" marginTop={2}>
               <Button
                 type="submit"
                 variant="contained"
@@ -166,6 +174,7 @@ const Register: React.FC = () => {
               </Button>
             </Box>
           </form>
+
           <Typography
             color="textSecondary"
             textAlign="center"
@@ -173,7 +182,7 @@ const Register: React.FC = () => {
             marginTop={2}
           >
             Already have an account?{" "}
-            <Link to="/login" style={{ textDecoration: "none", color: "blue" }}>
+            <Link to="/login" style={{ textDecoration: "none", color: "info" }}>
               Log in
             </Link>
           </Typography>
