@@ -11,33 +11,39 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { postRequest } from "../services/authService";
 import { theme } from "../services/customColor";
-import cover from "../assets/abstract.png";
+import Logo from "../assets/logo.png";
+import Cover from "../assets/abstract.png";
 
 type FormData = {
   firstName: string;
   lastName: string;
   email: string;
+  phoneNumber: string;
   password: string;
   confirmPassword: string;
 };
 
 const Register: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     email: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const navigate = useNavigate();
+  const [status, setStatus] = useState<string | null>(null);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if(formData.password != formData.confirmPassword) {
+      setStatus("Error: Password missmatch.");
+      return;
+    }
     setLoading(true);
-    setError(null);
 
     const response = await postRequest("auth/register", formData);
 
@@ -46,7 +52,7 @@ const Register: React.FC = () => {
       navigate("/login");
     } else {
       console.log("Register failed");
-      setError("Invalid email or mismatch password");
+      setStatus("Error: Invalid email or mismatch password");
     }
     setLoading(false);
   };
@@ -66,7 +72,7 @@ const Register: React.FC = () => {
         height="100vh"
         // bgcolor="palegreen"
         sx={{
-          backgroundImage: `url(${cover})`,
+          backgroundImage: `url(${Cover})`,
           backgroundRepeat: "repeat",
         }}
       >
@@ -74,9 +80,30 @@ const Register: React.FC = () => {
           elevation={3}
           sx={{ padding: "30px", maxWidth: "400px", width: "100%" }}
         >
-          <Typography variant="h5" textAlign="center" marginBottom={3}>
-            SriCare Login
+          <Box textAlign="center">
+            <img
+              src={Logo}
+              alt="Logo"
+              style={{
+                width: '230px',
+                objectFit: 'contain',
+                marginBottom: '5px',
+              }}
+            />
+          </Box>
+          <Typography variant="h5" textAlign="center" marginBottom={2}>
+            Registration
           </Typography>
+          {status && (
+          <Typography
+            variant="body2"
+            textAlign="center"
+            marginBottom={1}
+            color={status.startsWith("Error") ? 'error' : 'info'}
+          >
+            {status}
+          </Typography>
+          )}
           <form onSubmit={handleRegister}>
             <TextField
               fullWidth
@@ -113,6 +140,17 @@ const Register: React.FC = () => {
             />
             <TextField
               fullWidth
+              label="Contact Number"
+              variant="outlined"
+              margin="normal"
+              type="tel"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              fullWidth
               label="Password"
               variant="outlined"
               margin="normal"
@@ -133,12 +171,7 @@ const Register: React.FC = () => {
               onChange={handleChange}
               required
             />
-            {error && (
-              <Typography color="error" variant="body2" marginTop={1}>
-                {error}
-              </Typography>
-            )}
-            <Box textAlign="center" marginTop={3}>
+            <Box textAlign="center" marginTop={2}>
               <Button
                 type="submit"
                 variant="contained"
@@ -154,6 +187,7 @@ const Register: React.FC = () => {
               </Button>
             </Box>
           </form>
+
           <Typography
             color="textSecondary"
             textAlign="center"
@@ -161,7 +195,7 @@ const Register: React.FC = () => {
             marginTop={2}
           >
             Already have an account?{" "}
-            <Link to="/login" style={{ textDecoration: "none", color: "blue" }}>
+            <Link to="/login" style={{ textDecoration: "none", color: "info" }}>
               Log in
             </Link>
           </Typography>

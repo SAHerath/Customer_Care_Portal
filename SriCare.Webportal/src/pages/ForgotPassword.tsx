@@ -8,42 +8,36 @@ import {
   CircularProgress,
   ThemeProvider,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { postRequest, getCurrentUser } from "../services/authService";
+// import { Link, useNavigate } from "react-router-dom";
+import { postRequest } from "../services/authService";
 import { theme } from "../services/customColor";
 import Logo from "../assets/logo.png";
 import Cover from "../assets/abstract.png";
 
-
 type FormData = {
   email: string;
-  password: string;
 };
 
-const Login: React.FC = () => {
-  const navigate = useNavigate();
+const ForgotPassword: React.FC = () => {
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
-    password: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [status, setStatus] = useState<string | null>(null);
 
-
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handlefoget = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setStatus(null);
-
-    const response = await postRequest("auth/login", formData);
-
+  
+    const response = await postRequest('/auth/forgotPassword', formData);
+  
     if (response) {
-      console.log("Login successful:", response);
-      getCurrentUser();
-      navigate("/dashboard");
+      console.log('Request Sent:', response);
+      setStatus("A reset link has been sent to your email.");
     } else {
-      console.log("Login failed");
-      setStatus("Error: Invalid email or password");
+      console.log('Login failed');
+      setStatus("Error: Unable to send reset email. Please try again later.");
     }
     setLoading(false);
   };
@@ -52,7 +46,8 @@ const Login: React.FC = () => {
     const { name, value } = e.target;
     console.log(name, value);
     setFormData((prevState) => ({ ...prevState, [name]: value }));
-  };
+  };  
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -63,13 +58,13 @@ const Login: React.FC = () => {
         height="100vh"
         // bgcolor="palegreen"
         sx={{
-          backgroundImage: `url(${Cover})`,
+          backgroundImage:`url(${Cover})`,
           backgroundRepeat: "repeat",
         }}
       >
         <Paper
           elevation={3}
-          sx={{ padding: "30px", maxWidth: "400px", width: "100%" }}
+          sx={{ padding: '30px', maxWidth: '400px', width: '100%' }}
         >
           <Box textAlign="center">
             <img
@@ -83,7 +78,7 @@ const Login: React.FC = () => {
             />
           </Box>
           <Typography variant="h5" textAlign="center" marginBottom={2}>
-            Login
+            Forgot password?
           </Typography>
           {status && (
           <Typography
@@ -95,7 +90,7 @@ const Login: React.FC = () => {
             {status}
           </Typography>
           )}
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handlefoget}>
             <TextField
               fullWidth
               label="Email"
@@ -107,17 +102,6 @@ const Login: React.FC = () => {
               onChange={handleChange}
               required
             />
-            <TextField
-              fullWidth
-              label="Password"
-              variant="outlined"
-              margin="normal"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
             <Box textAlign="center" marginTop={2}>
               <Button
                 type="submit"
@@ -126,44 +110,15 @@ const Login: React.FC = () => {
                 disabled={loading}
                 fullWidth
               >
-                {loading ? (
-                  <CircularProgress size={24} color="inherit" />
-                ) : (
-                  "Login"
-                )}
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Send Request'}
               </Button>
             </Box>
           </form>
-
-          <Typography
-            color="textSecondary"
-            textAlign="center"
-            variant="body2"
-            marginTop={2}
-          >
-            New user?{" "}
-            <Link
-              to="/register"
-              style={{ textDecoration: "none", color: "info" }}
-            >
-              Register
-            </Link>
-          </Typography>
-          <Typography
-            color="textSecondary"
-            textAlign="center"
-            variant="body2"
-            marginTop={2}
-          >
-            Forgot password?{" "}
-            <Link to="/forgot-password" style={{ textDecoration: "none", color: "info" }}>
-              Reset Password
-            </Link>
-          </Typography>
+          
         </Paper>
       </Box>
     </ThemeProvider>
   );
 };
 
-export default Login;
+export default ForgotPassword;

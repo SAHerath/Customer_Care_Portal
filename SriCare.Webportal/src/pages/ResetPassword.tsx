@@ -8,42 +8,59 @@ import {
   CircularProgress,
   ThemeProvider,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { postRequest, getCurrentUser } from "../services/authService";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { postRequest } from "../services/authService";
 import { theme } from "../services/customColor";
 import Logo from "../assets/logo.png";
 import Cover from "../assets/abstract.png";
 
-
 type FormData = {
+  resetCode: string;
   email: string;
-  password: string;
+  newPassword: string;
+  confirmPassword: string;
 };
 
-const Login: React.FC = () => {
+const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState<FormData>({
+    resetCode: "",
     email: "",
-    password: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [status, setStatus] = useState<string | null>(null);
 
+  const appCode = searchParams.get('code');
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleReset = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    setStatus(null);
 
-    const response = await postRequest("auth/login", formData);
+    if (!appCode) {
+      setStatus("Error: No reset code found!");
+      return;
+    }
+
+    if(formData.newPassword !== formData.confirmPassword) {
+      setStatus("Error: Password missmatch.");
+      return;
+    }
+
+    setLoading(true);
+
+    formData.resetCode = appCode;
+
+    const response = await postRequest("auth/resetPassword", formData);
 
     if (response) {
-      console.log("Login successful:", response);
-      getCurrentUser();
-      navigate("/dashboard");
+      console.log("Reset successful:", response.data);
+      alert("Password has been reset successfully!");
+      navigate("/login");
     } else {
-      console.log("Login failed");
-      setStatus("Error: Invalid email or password");
+      console.log("Register failed");
+      setStatus("Error: Unable to reset password. Please try again later.");
     }
     setLoading(false);
   };
@@ -83,7 +100,7 @@ const Login: React.FC = () => {
             />
           </Box>
           <Typography variant="h5" textAlign="center" marginBottom={2}>
-            Login
+            Reset Password
           </Typography>
           {status && (
           <Typography
@@ -95,7 +112,7 @@ const Login: React.FC = () => {
             {status}
           </Typography>
           )}
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleReset}>
             <TextField
               fullWidth
               label="Email"
@@ -109,12 +126,23 @@ const Login: React.FC = () => {
             />
             <TextField
               fullWidth
-              label="Password"
+              label="New Password"
               variant="outlined"
               margin="normal"
               type="password"
-              name="password"
-              value={formData.password}
+              name="newPassword"
+              value={formData.newPassword}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              fullWidth
+              label="Confirm Password"
+              variant="outlined"
+              margin="normal"
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
               onChange={handleChange}
               required
             />
@@ -129,35 +157,20 @@ const Login: React.FC = () => {
                 {loading ? (
                   <CircularProgress size={24} color="inherit" />
                 ) : (
-                  "Login"
+                  "Reset"
                 )}
               </Button>
             </Box>
           </form>
-
           <Typography
             color="textSecondary"
             textAlign="center"
             variant="body2"
             marginTop={2}
           >
-            New user?{" "}
-            <Link
-              to="/register"
-              style={{ textDecoration: "none", color: "info" }}
-            >
-              Register
-            </Link>
-          </Typography>
-          <Typography
-            color="textSecondary"
-            textAlign="center"
-            variant="body2"
-            marginTop={2}
-          >
-            Forgot password?{" "}
-            <Link to="/forgot-password" style={{ textDecoration: "none", color: "info" }}>
-              Reset Password
+            Back to login?{" "}
+            <Link to="/login" style={{ textDecoration: "none", color: "info" }}>
+              Log in
             </Link>
           </Typography>
         </Paper>
@@ -166,4 +179,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;
