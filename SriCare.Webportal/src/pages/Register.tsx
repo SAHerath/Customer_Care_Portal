@@ -11,7 +11,8 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { postRequest } from "../services/authService";
 import { theme } from "../services/customColor";
-import cover from "../assets/abstract.png";
+import Logo from "../assets/logo.png";
+import Cover from "../assets/abstract.png";
 
 type FormData = {
   firstName: string;
@@ -66,7 +67,7 @@ const Register: React.FC = () => {
         height="100vh"
         // bgcolor="palegreen"
         sx={{
-          backgroundImage: `url(${cover})`,
+          backgroundImage: `url(${Cover})`,
           backgroundRepeat: "repeat",
         }}
       >
@@ -74,8 +75,19 @@ const Register: React.FC = () => {
           elevation={3}
           sx={{ padding: "30px", maxWidth: "400px", width: "100%" }}
         >
-          <Typography variant="h5" textAlign="center" marginBottom={3}>
-            SriCare Login
+          <Box textAlign="center">
+            <img
+              src={Logo}
+              alt="Logo"
+              style={{
+                width: '230px',
+                objectFit: 'contain',
+                marginBottom: '5px',
+              }}
+            />
+          </Box>
+          <Typography variant="h5" textAlign="center" marginBottom={2}>
+            Registration
           </Typography>
           <form onSubmit={handleRegister}>
             <TextField
