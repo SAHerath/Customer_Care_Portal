@@ -4,5 +4,6 @@ namespace SriCare.Notification.Application.Interfaces
     {
         Task SendConfirmationLinkAsync(string email, string confirmationLink);
         Task SendPasswordResetLinkAsync(string email, string passwordResetLink);
+        Task SendEmail(string email, string subject, string body);
     }
 }

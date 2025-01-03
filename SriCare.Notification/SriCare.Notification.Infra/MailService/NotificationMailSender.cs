@@ -37,6 +37,34 @@ namespace SriCare.Notification.Infra.MailService
 
         }
 
+        public async Task SendEmail(string email, string subject, string body)
+        {
+            var emailMsg = new MimeMessage();
+            emailMsg.From.Add(new MailboxAddress(emailSettings.SenderName, emailSettings.SenderEmail));
+            emailMsg.To.Add(new MailboxAddress("",email));
+            emailMsg.Subject = subject;
+            emailMsg.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+                                {
+                                    Text = body
+                                };
+
+            using var smtpClient = new SmtpClient();
+
+            try
+            {
+                await smtpClient.ConnectAsync(emailSettings.SmtpServer, emailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                await smtpClient.AuthenticateAsync(emailSettings.Username, emailSettings.Password);
+                await smtpClient.SendAsync(emailMsg);
+            }catch(Exception ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }finally
+            {
+                await smtpClient.DisconnectAsync(true);
+            }
+        }
+
         public async Task SendPasswordResetLinkAsync(string email, string passwordResetLink)
         {
             var emailMsg = new MimeMessage();
