@@ -11,7 +11,7 @@ import {
   ListItemText,
 } from "@mui/material";
 
-import { Mail, Person, Notifications, Settings } from "@mui/icons-material";
+import { Home, Mail, Person, Notifications, Settings } from "@mui/icons-material";
 
 import Logo from "../assets/logo.png";
 
@@ -35,7 +35,7 @@ const SideNav: React.FC = () => {
           <ListItem disablePadding>
             <ListItemButton  component={LinkRouter} to="/dashboard">
               <ListItemIcon>
-                <Mail />
+                <Home />
               </ListItemIcon>
               <ListItemText primary="Home" />
             </ListItemButton>
