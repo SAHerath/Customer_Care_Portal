@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Hosting;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 
@@ -26,9 +28,19 @@ var coreService = builder.AddProject<Projects.SriCare_Core_Api>("coreService")
                     .WaitFor(coreDB)
                     .WaitFor(messaging);
 
+var paymentService = builder.AddNpmApp("paymentService","../SriCare.Payment", "start:all")
+                    .WithHttpsEndpoint(port: 7200, env: "PORT",targetPort: 5005)
+                    .WithEnvironment("GATEWAY_PORT", "7201")
+                    .WithEnvironment("JWT_ISSUER", "https://authService/")
+                    .WithEnvironment("JWT_AUDIENCE", "apis")
+                    .WithEnvironment("JWT_SIGNING_KEY", "a3d42138-edb7-4eb7-9f89-dbc39ba1c6c4");
+                  
+
 var billingService = builder.AddProject<Projects.SriCare_Billing_Api>("billingService")
                     .WithReference(messaging)
+                    .WithReference(paymentService)
                     .WaitFor(messaging)
+                    .WaitFor(paymentService)
                     .WithReference(coreService);
 
 var notificationService = builder.AddProject<Projects.SriCare_Notification_Api>("notificationService")
@@ -39,6 +51,7 @@ var notificationService = builder.AddProject<Projects.SriCare_Notification_Api>(
 var apiGateway = builder.AddProject<Projects.SriCare_ApiGateway>("apigateway")
     .WithReference(authService)
     .WithReference(coreService)
+    .WithReference(paymentService)
     .WithReference(billingService)
     .WithReference(notificationService)
     .WithExternalHttpEndpoints();
