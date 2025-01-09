@@ -3,10 +3,12 @@ using Carter;
 using Common.Utils.Account;
 using Common.Utils.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SriCare.Billing.Application.Features.Billing.GenerateBill;
 using SriCare.Billing.Application.Features.Billing.GetCurrentBill;
 using SriCare.Billing.Application.Features.Billing.GetPastBills;
 using SriCare.Billing.Application.Features.Billing.GetPaymentHistory;
+using SriCare.Billing.Application.Features.Billing.PayBill;
 
 namespace SriCare.Billing.Api.Features.Billing
 {
@@ -46,6 +48,13 @@ namespace SriCare.Billing.Api.Features.Billing
                 return Results.Ok();
             })
             .Produces((int)HttpStatusCode.OK)
+            .Produces<ErrorModel>((int)HttpStatusCode.BadRequest);
+
+            app.MapPost("/pay-bill", async ( [FromBody] PayBillRequestDto command, ISender sender,IUserIdentity user) => 
+            {
+                return Results.Ok( await sender.Send(new PayBillCommand { UserId = user.Id, Amount = command.Amount, Method = command.Method}));
+            })
+            .Produces<PayBillCommandResponse>((int)HttpStatusCode.OK)
             .Produces<ErrorModel>((int)HttpStatusCode.BadRequest);
         }
     }
