@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http.Resilience;
 using Polly;
-using Polly.RateLimiting;
 using Refit;
 using SriCare.Billing.Application.interfaces;
 using SriCare.Billing.Infrastructure.Services;
