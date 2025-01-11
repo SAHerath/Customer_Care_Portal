@@ -1,8 +1,10 @@
 using Common.Utils.Messages;
 using Common.Utils.Messages.Auth;
+using Common.Utils.Messages.Billing;
 using MediatR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using SriCare.Notification.Application.Features.Emails.SendBillingReport;
 using SriCare.Notification.Application.Features.Emails.SendConfirmationLink;
 using SriCare.Notification.Application.Features.Emails.SendForgotPasswordLink;
 
@@ -76,6 +78,22 @@ namespace SriCare.Notification.Api.HostedServices
                 var command = new SendForgotPasswordLinkCommand {
                     Email = msg.Email,
                     ResetLink = msg.Body
+                };
+
+                await mediator.Send(command);
+            }
+
+            if(message.Type == typeof(BillingReport).Name)
+            {
+                var msg = message.Convert<BillingReport>();
+                _logger.LogInformation(msg.Email);
+                var command = new SendBillingReportCommand {
+                    BillId = msg.BillId,
+                    UserName = msg.UserName,
+                    Email = msg.Email,
+                    Amount = msg.Amount,
+                    DueDate = msg.DueDate,
+                    Status = msg.Status,
                 };
 
                 await mediator.Send(command);
