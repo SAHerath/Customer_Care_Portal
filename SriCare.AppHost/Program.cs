@@ -49,17 +49,17 @@ var notificationService = builder.AddProject<Projects.SriCare_Notification_Api>(
 
 // Configure API Gateway
 var apiGateway = builder.AddProject<Projects.SriCare_ApiGateway>("apigateway")
-    .WithReference(authService)
-    .WithReference(coreService)
-    .WithReference(paymentService)
-    .WithReference(billingService)
-    .WithReference(notificationService)
-    .WithExternalHttpEndpoints();
+                    .WithReference(authService)
+                    .WithReference(coreService)
+                    .WithReference(paymentService)
+                    .WithReference(billingService)
+                    .WithReference(notificationService)
+                    .WithExternalHttpEndpoints();
 
-builder.AddNpmApp("webPortal","../SriCare.Webportal","dev")
-    .WithReference(apiGateway)
-    .WaitFor(apiGateway)
-    .WithHttpsEndpoint(port: 5000, env: "PORT",targetPort: 5173)
-    .WithExternalHttpEndpoints();
+builder.AddNpmApp("webApp","../SriCare.WebApp","dev")
+                    .WithReference(apiGateway)
+                    .WaitFor(apiGateway)
+                    .WithHttpsEndpoint(port: 5000, env: "PORT",targetPort: 5173)
+                    .WithExternalHttpEndpoints();
 
 builder.Build().Run();

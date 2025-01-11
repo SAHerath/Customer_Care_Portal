@@ -76,6 +76,19 @@ export const postRequest = async (
   }
 };
 
+export const getRequest = async (
+  endpoint: string,
+  params?: object
+): Promise<AxiosResponse | null> => {
+  try {
+    const response: AxiosResponse = await client.get(endpoint, { params });
+    return response;
+  } catch (error) {
+    console.error(`GET request to ${endpoint} failed:`, error);
+    return null;
+  }
+};
+
 // const getToken = () => {
 //   const match = document.cookie.match(new RegExp('(^| )' + tokenName + '=([^;]+)'));
 //   return match ? match[2] : null;
@@ -89,9 +102,13 @@ export const isAuthenticated = (): boolean => {
   const token = getToken();
   if (!token) return false;
 
-  const payload = JSON.parse(atob(token.split(".")[1]));
-  // return payload.exp * 1000 > Date.now();
-  return true;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp * 1000 > Date.now(); // Check if token is expired
+  } catch (error) {
+    console.error('Invalid token:', error);
+    return false;
+  }
 };
 
 export const getCurrentUser = (): string => {
@@ -99,9 +116,9 @@ export const getCurrentUser = (): string => {
   if (!token) return "No User";
 
   const payload = JSON.parse(atob(token.split(".")[1]));
-  const user = payload.name.split(" ")[0];
-  console.log("currentUser: ", user);
-  return user;
+  // const user = payload.name.split(" ")[0];
+  console.log("currentUser: ", payload.name);
+  return payload.name;
 };
 
 export const logout = (): void => {
