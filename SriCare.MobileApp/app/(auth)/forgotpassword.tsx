@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import {
   View,
   Text,
@@ -12,22 +12,32 @@ import {
   ImageBackground,
 } from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { styles } from '../styles/styles1'; 
+import { postRequest } from '../../services/authService';
+import { styles } from '../../styles/styles1'; 
 
 export default function forgotpasswordScreen() {
+  const router = useRouter();
   const [formData, setFormData] = useState({ email: ''});
   const [loading, setLoading] = useState(false);
 
   const handlefoget = async () => {
+    const { email } = formData;
+    if (!email ) {
+      Alert.alert('Error', 'Please fill in all fields.');
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
-      if (formData.email === 'test@test.com') {
-        Alert.alert('Login successful!');
-      } else {
-        Alert.alert('Login failed', 'Invalid email');
-      }
-      setLoading(false);
-    }, 2000);
+
+    const response = await postRequest("auth/forgotPassword", formData);
+
+    if (response) {
+      Alert.alert('Success', 'Request sent. Please check your email.');
+      router.replace('/details');
+    } else {
+      Alert.alert('Error', 'Failed to send request.');
+    }
+    setLoading(false);
 
   };
 

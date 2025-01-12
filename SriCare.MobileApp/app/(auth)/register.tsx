@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'expo-router';
+import { Link, useRouter, useFocusEffect } from 'expo-router';
 import {
   View,
   Text,
@@ -12,23 +12,35 @@ import {
   ImageBackground,
 } from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { styles } from '../styles/styles1'; 
+import { postRequest } from '../../services/authService';
+import { styles } from '../../styles/styles1'; 
 
 export default function RegisterScreen() {
+  const router = useRouter();
   const [formData, setFormData] = useState({firstName: '', lastName: '', email: '', phoneNumber: '', password: '', confirmPassword: '' });
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
+    const { firstName, lastName, email, phoneNumber, password, confirmPassword } = formData;
+    if (!firstName || !lastName || !email || !phoneNumber || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill in all fields.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
+      return;
+    }
     setLoading(true);
-    setTimeout(() => {
-      if (formData.email === 'test@test.com' && formData.password === 'password') {
-        Alert.alert('Login successful!');
-      } else {
-        Alert.alert('Registration failed', 'Try again later!');
-      }
-      setLoading(false);
-    }, 2000);
 
+    const response = await postRequest("auth/register", formData);
+  
+    if (response) {
+      Alert.alert('Success', 'Registration successful!');
+      router.replace('/login');
+    } else {
+      Alert.alert('Error', 'Failed to register.');
+    }
+    setLoading(false);
   };
 
   return (
