@@ -27,7 +27,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseConfigureExceptionHandler();
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

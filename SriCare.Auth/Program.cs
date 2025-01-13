@@ -77,7 +77,7 @@ if (app.Environment.IsDevelopment())
 // Enable Identity APIs
 app.CustomMapIdentityApi<User>();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
