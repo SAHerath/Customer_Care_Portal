@@ -62,4 +62,10 @@ builder.AddNpmApp("webApp","../SriCare.WebApp","dev")
                     .WithHttpsEndpoint(port: 5000, env: "PORT",targetPort: 5173)
                     .WithExternalHttpEndpoints();
 
+// builder.AddNpmApp("mobileApp","../SriCare.MobileApp","start")
+//     .WithReference(apiGateway)
+//     .WaitFor(apiGateway)
+//     .WithHttpsEndpoint(port: 8000, env: "PORT",targetPort: 8081)
+//     .WithExternalHttpEndpoints();
+
 builder.Build().Run();
