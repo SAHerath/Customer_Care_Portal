@@ -10,6 +10,9 @@ import Home from "./pages/Home";
 import Profile from "./pages/ProfileView";
 import GeneralPlans from "./pages/GeneralPlans";
 import RoamingPlans from "./pages/RoamingPlans";
+import CurrentBill from "./pages/CurrentBill";
+import PastBills from "./pages/PastBills";
+import PaymentHistory from "./pages/PaymentHistory";
 
 
 const App: React.FC = () => {
@@ -20,8 +23,11 @@ const App: React.FC = () => {
     const titleMap: Record<string, string> = {
       '/dashboard': 'Dashboard',
       '/dashboard/view-profile': 'Profile',
-      '/dashboard/package-plans/general': 'General Plans',
-      '/dashboard/package-plans/roaming': 'Roaming Plans',
+      '/dashboard/packages/general': 'General Plans',
+      '/dashboard/packages/roaming': 'Roaming Plans',
+      '/dashboard/billing/summery': 'Bill Summery',
+      '/dashboard/billing/history': 'Bill History',
+      '/dashboard/billing/payments': 'Bill Payments',
       '/dashboard/settings': 'Settings',
     };
     return titleMap[path] || 'Dashboard';
@@ -43,8 +49,11 @@ const App: React.FC = () => {
             } >
         <Route index element={<Home />} />
         <Route path="view-profile" element={<Profile />} />
-        <Route path="package-plans/general" element={<GeneralPlans />} />
-        <Route path="package-plans/roaming" element={<RoamingPlans />} />
+        <Route path="packages/general" element={<GeneralPlans />} />
+        <Route path="packages/roaming" element={<RoamingPlans />} />
+        <Route path="billing/summery" element={<CurrentBill />} />
+        <Route path="billing/history" element={<PastBills />} />
+        <Route path="billing/payments" element={<PaymentHistory />} />
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" />} />
     </Routes>

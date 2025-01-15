@@ -12,15 +12,19 @@ import {
   Collapse,
 } from "@mui/material";
 
-import { Home, Mail, WidgetsOutlined, Person, Notifications, Settings, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Home, Mail, Widgets, Receipt, Person, Notifications, Settings, ExpandLess, ExpandMore } from "@mui/icons-material";
 
 import Logo from "../assets/logo.png";
 
 const SideNav: React.FC = () => {
   const [openPlans, setOpenPlans] = useState(false);
+  const [openBills, setOpenBills] = useState(false);
 
   const handlePlans = () => {
     setOpenPlans(!openPlans);
+  };
+  const handleBills = () => {
+    setOpenBills(!openBills);
   };
 
   return (
@@ -50,7 +54,7 @@ const SideNav: React.FC = () => {
           <ListItem disablePadding>
             <ListItemButton onClick={handlePlans}>
               <ListItemIcon>
-                <WidgetsOutlined />
+                <Widgets />
               </ListItemIcon>
               <ListItemText primary="Packages" />
               {openPlans ? <ExpandLess /> : <ExpandMore />}
@@ -59,12 +63,12 @@ const SideNav: React.FC = () => {
           <Collapse in={openPlans} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItem disablePadding>
-                <ListItemButton component={LinkRouter} to="/dashboard/package-plans/general" sx={{ pl: 10 }}>
+                <ListItemButton component={LinkRouter} to="/dashboard/packages/general" sx={{ pl: 6 }}>
                   <ListItemText primary="General" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component={LinkRouter} to="/dashboard/package-plans/roaming" sx={{ pl: 10 }}>
+                <ListItemButton component={LinkRouter} to="/dashboard/packages/roaming" sx={{ pl: 6 }}>
                   <ListItemText primary="Roaming" />
                 </ListItemButton>
               </ListItem>
@@ -72,13 +76,33 @@ const SideNav: React.FC = () => {
           </Collapse>
 
           <ListItem disablePadding>
-            <ListItemButton component={LinkRouter} to="/bills">
+            <ListItemButton onClick={handleBills}>
               <ListItemIcon>
-                <Mail />
+                <Receipt />
               </ListItemIcon>
               <ListItemText primary="Bills" />
+              {openBills ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
           </ListItem>
+          <Collapse in={openBills} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem disablePadding>
+                <ListItemButton component={LinkRouter} to="/dashboard/billing/summery" sx={{ pl: 6 }}>
+                  <ListItemText primary="Summery" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton component={LinkRouter} to="/dashboard/billing/history" sx={{ pl: 6 }}>
+                  <ListItemText primary="History" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton component={LinkRouter} to="/dashboard/billing/payments" sx={{ pl: 6 }}>
+                  <ListItemText primary="Payments" />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </Collapse>
 
           <ListItem disablePadding>
             <ListItemButton component={LinkRouter} to="/dashboard/view-profile">
