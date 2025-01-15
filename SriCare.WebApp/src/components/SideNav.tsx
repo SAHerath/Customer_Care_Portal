@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link as LinkRouter } from "react-router-dom";
 import {
   Box,
@@ -9,13 +9,19 @@ import {
   ListItemIcon,
   ListItemButton,
   ListItemText,
+  Collapse,
 } from "@mui/material";
 
-import { Home, Mail, Person, Notifications, Settings } from "@mui/icons-material";
+import { Home, Mail, WidgetsOutlined, Person, Notifications, Settings, ExpandLess, ExpandMore } from "@mui/icons-material";
 
 import Logo from "../assets/logo.png";
 
 const SideNav: React.FC = () => {
+  const [openPlans, setOpenPlans] = useState(false);
+
+  const handlePlans = () => {
+    setOpenPlans(!openPlans);
+  };
 
   return (
     <Drawer variant="permanent" anchor="left" sx={{ width: 240 }}>
@@ -42,20 +48,35 @@ const SideNav: React.FC = () => {
           </ListItem>
 
           <ListItem disablePadding>
+            <ListItemButton onClick={handlePlans}>
+              <ListItemIcon>
+                <WidgetsOutlined />
+              </ListItemIcon>
+              <ListItemText primary="Packages" />
+              {openPlans ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+          </ListItem>
+          <Collapse in={openPlans} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem disablePadding>
+                <ListItemButton component={LinkRouter} to="/dashboard/package-plans/general" sx={{ pl: 10 }}>
+                  <ListItemText primary="General" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton component={LinkRouter} to="/dashboard/package-plans/roaming" sx={{ pl: 10 }}>
+                  <ListItemText primary="Roaming" />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </Collapse>
+
+          <ListItem disablePadding>
             <ListItemButton component={LinkRouter} to="/bills">
               <ListItemIcon>
                 <Mail />
               </ListItemIcon>
               <ListItemText primary="Bills" />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton component={LinkRouter} to="/services">
-              <ListItemIcon>
-                <Mail />
-              </ListItemIcon>
-              <ListItemText primary="Services" />
             </ListItemButton>
           </ListItem>
 

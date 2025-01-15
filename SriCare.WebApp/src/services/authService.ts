@@ -65,7 +65,7 @@ client.interceptors.response.use(
 
 export const postRequest = async (
   endpoint: string,
-  data: object
+  data?: object
 ): Promise<AxiosResponse | null> => {
   try {
     const response: AxiosResponse = await client.post(endpoint, data);
@@ -85,6 +85,19 @@ export const getRequest = async (
     return response;
   } catch (error) {
     console.error(`GET request to ${endpoint} failed:`, error);
+    return null;
+  }
+};
+
+export const patchRequest = async (
+  endpoint: string,
+  data?: object
+): Promise<AxiosResponse | null> => {
+  try {
+    const response: AxiosResponse = await client.patch(endpoint, { data });
+    return response;
+  } catch (error) {
+    console.error(`POST request to ${endpoint} failed:`, error);
     return null;
   }
 };

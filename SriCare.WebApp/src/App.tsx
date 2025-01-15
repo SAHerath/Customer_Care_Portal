@@ -8,6 +8,8 @@ import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Profile from "./pages/ProfileView";
+import GeneralPlans from "./pages/GeneralPlans";
+import RoamingPlans from "./pages/RoamingPlans";
 
 
 const App: React.FC = () => {
@@ -18,6 +20,8 @@ const App: React.FC = () => {
     const titleMap: Record<string, string> = {
       '/dashboard': 'Dashboard',
       '/dashboard/view-profile': 'Profile',
+      '/dashboard/package-plans/general': 'General Plans',
+      '/dashboard/package-plans/roaming': 'Roaming Plans',
       '/dashboard/settings': 'Settings',
     };
     return titleMap[path] || 'Dashboard';
@@ -39,6 +43,8 @@ const App: React.FC = () => {
             } >
         <Route index element={<Home />} />
         <Route path="view-profile" element={<Profile />} />
+        <Route path="package-plans/general" element={<GeneralPlans />} />
+        <Route path="package-plans/roaming" element={<RoamingPlans />} />
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" />} />
     </Routes>
