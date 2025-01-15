@@ -73,7 +73,7 @@ const PastBills: React.FC = () => {
           {bills.map((bill) => (
             <TableRow key={bill.billId}>
               <TableCell>{bill.billId}</TableCell>
-              <TableCell>₹{bill.amount.toFixed(2)}</TableCell>
+              <TableCell>Rs.{bill.amount.toFixed(2)}</TableCell>
               <TableCell>{new Date(bill.dueDate).toLocaleDateString()}</TableCell>
               <TableCell>{new Date(bill.paidDate).toLocaleDateString()}</TableCell>
               <TableCell>{bill.status}</TableCell>

@@ -74,7 +74,7 @@ const PaymentHistory: React.FC = () => {
             <TableRow key={payment.paymentId}>
               <TableCell>{payment.paymentId}</TableCell>
               <TableCell>{payment.billId}</TableCell>
-              <TableCell>${payment.amount.toFixed(2)}</TableCell>
+              <TableCell>Rs.{payment.amount.toFixed(2)}</TableCell>
               <TableCell>{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
               <TableCell>{payment.method}</TableCell>
             </TableRow>

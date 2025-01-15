@@ -63,7 +63,7 @@ const CurrentBill: React.FC = () => {
   return (
     <Paper elevation={3} sx={{ padding: 4, textAlign: 'center', }}>
       <Typography variant="h6">Bill ID: {bill?.billId}</Typography>
-      <Typography variant="body1">Amount: ₹{bill?.amount.toFixed(2)}</Typography>
+      <Typography variant="body1">Amount: Rs.{bill?.amount.toFixed(2)}</Typography>
       <Typography variant="body1">
         Due Date: {new Date(bill? bill.dueDate : '').toLocaleDateString()}
       </Typography>
