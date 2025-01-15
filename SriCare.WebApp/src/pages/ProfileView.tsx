@@ -20,6 +20,7 @@ const Profile: React.FC = () => {
         const response = await getRequest("auth/manage/info");
         if (response) {
           setUser(response.data);
+          // console.log(response.data);
         }
       } catch (error) {
         console.error('Error fetching data:', error);

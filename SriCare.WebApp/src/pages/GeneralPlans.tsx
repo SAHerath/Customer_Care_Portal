@@ -141,7 +141,7 @@ const GeneralPlans: React.FC = () => {
           </Paper>
         </Grid2>
       ))}
-        </Grid2>
+    </Grid2>
   );
 };
 
