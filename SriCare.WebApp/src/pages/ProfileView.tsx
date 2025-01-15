@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Paper, Avatar, Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { 
+  Box,
+  Typography,
+  Paper,
+  Avatar,
+  Button,
+  CircularProgress,
+  Badge,
+} from "@mui/material";
+import { VerifiedOutlined } from "@mui/icons-material";
 import { getRequest } from "../services/authService";
+
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+  isEmailConfirmed: boolean;
+  id: string;
+}
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<{
-    firstName: string;
-    lastName: string;
-    email: string;
-    id: string;
-  } | null>(null);
+  const [user, setUser] = useState<User|null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -30,10 +42,24 @@ const Profile: React.FC = () => {
     fetchData();
     setLoading(false);
   }, []);
+  
 
   const handleEditProfile = () => {
     navigate('/edit-profile');
   };
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Paper
@@ -43,25 +69,38 @@ const Profile: React.FC = () => {
         textAlign: 'center',
       }}
     >
-      {
-      // loading ? (
-      //   <CircularProgress />
-      // ) : 
-      // user ? (
+      { user &&
         <>
           {/* User Avatar */}
-          <Avatar
-            // alt={`${user.firstName} ${user.lastName}`}
-            // src={}
+          { user.isEmailConfirmed ? (
+            <Badge color="success" 
+              overlap="circular"  
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent={
+                <VerifiedOutlined />
+              }
+              sx={{padding: 0.25}}
+            >
+              <Avatar
+                alt={`${user.firstName} ${user.lastName}`}
+                // src={}
+                sx={{ width: 100, height: 100, margin: '0 auto' }}
+              />
+            </Badge>
+          ) : (
+            <Avatar
+            alt={`${user.firstName} ${user.lastName}`}
             sx={{ width: 100, height: 100, margin: '0 auto' }}
           />
+          )
+          } 
 
           {/* User Information */}
           <Typography variant="h5" sx={{ marginTop: 2 }}>
-            {/* {user.firstName} {user.lastName} */}
+            {user.firstName} {user.lastName}
           </Typography>
           <Typography variant="body1" color="textSecondary" sx={{ marginBottom: 3 }}>
-            {/* {user.email} */}
+            {user.email}
           </Typography>
 
           {/* Edit Profile Button */}
@@ -69,11 +108,6 @@ const Profile: React.FC = () => {
             Edit Profile
           </Button>
         </>
-      // ) : (
-      //   <Typography variant="body1" color="error">
-      //     Failed to load user profile.
-      //   </Typography>
-      // )
       }
     </Paper>
   );
