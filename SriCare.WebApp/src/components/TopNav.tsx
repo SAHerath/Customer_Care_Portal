@@ -40,6 +40,7 @@ const TopNav: React.FC<TopNavProps> = ({ title }) => {
     handleMenuClose();
   };
 
+  /*
   function stringToColor(string: string) {
     let hash = 0;
     let i;
@@ -59,12 +60,14 @@ const TopNav: React.FC<TopNavProps> = ({ title }) => {
   
     return color;
   }
+  */
   
   function stringAvatar(name: string) {
     const avatar = name.toUpperCase()
     return {
       sx: {
-        bgcolor: stringToColor(avatar),
+        color: 'black',
+        bgcolor: '#f8f8f8',
       },
       children: `${avatar.split(' ')[0][0]}${avatar.split(' ')[1][0]}`,
     };
@@ -83,7 +86,7 @@ const TopNav: React.FC<TopNavProps> = ({ title }) => {
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
           <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-            <Badge badgeContent={4} color="error">
+            <Badge badgeContent={1} color="error">
               <Mail />
             </Badge>
           </IconButton>
@@ -92,7 +95,7 @@ const TopNav: React.FC<TopNavProps> = ({ title }) => {
             aria-label="show 17 new notifications"
             color="inherit"
           >
-            <Badge badgeContent={17} color="error">
+            <Badge badgeContent={3} color="error">
               <Notifications />
             </Badge>
           </IconButton>

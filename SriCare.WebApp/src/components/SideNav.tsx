@@ -12,7 +12,7 @@ import {
   Collapse,
 } from "@mui/material";
 
-import { Home, Mail, Widgets, Receipt, Person, Notifications, Settings, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Home, Widgets, Receipt, Person, Notifications, Settings, ExpandLess, ExpandMore } from "@mui/icons-material";
 
 import Logo from "../assets/logo.png";
 
@@ -108,7 +108,6 @@ const SideNav: React.FC = () => {
             <ListItemButton component={LinkRouter} to="/dashboard/view-profile">
               <ListItemIcon>
                 <Person />  
-                {/* <AccountBox /> */}
               </ListItemIcon>
               <ListItemText primary="Profile" />
             </ListItemButton>
