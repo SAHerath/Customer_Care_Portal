@@ -13,6 +13,7 @@ import RoamingPlans from "./pages/RoamingPlans";
 import CurrentBill from "./pages/CurrentBill";
 import PastBills from "./pages/PastBills";
 import PaymentHistory from "./pages/PaymentHistory";
+import Chat from "./pages/Chat";
 
 
 const App: React.FC = () => {
@@ -29,6 +30,7 @@ const App: React.FC = () => {
       '/dashboard/billing/history': 'Bill History',
       '/dashboard/billing/payments': 'Bill Payments',
       '/dashboard/settings': 'Settings',
+      '/dashboard/chat': 'Live Chat',
     };
     return titleMap[path] || 'Dashboard';
   };
@@ -54,6 +56,7 @@ const App: React.FC = () => {
         <Route path="billing/summery" element={<CurrentBill />} />
         <Route path="billing/history" element={<PastBills />} />
         <Route path="billing/payments" element={<PaymentHistory />} />
+        <Route path="chat" element={<Chat />} />
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" />} />
     </Routes>
