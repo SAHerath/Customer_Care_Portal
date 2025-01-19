@@ -71,7 +71,7 @@ const CurrentBill: React.FC = () => {
       <Button
         variant="contained"
         color="primary"
-        sx={{ marginTop: 2 }}
+        sx={{ marginTop: 2, backgroundColor: "#9F774E", }}
         onClick={handlePayBill}
       >
         Pay Bill

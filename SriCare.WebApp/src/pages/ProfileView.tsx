@@ -45,6 +45,7 @@ const Profile: React.FC = () => {
   
 
   const handleEditProfile = () => {
+    alert("Edit profile");
     navigate('/edit-profile');
   };
 
@@ -65,50 +66,62 @@ const Profile: React.FC = () => {
     <Paper
       elevation={3}
       sx={{
-        padding: '4rem  ',
+        padding: '4rem',
         textAlign: 'center',
       }}
     >
-      { user &&
-        <>
-          {/* User Avatar */}
-          { user.isEmailConfirmed ? (
-            <Badge color="success" 
-              overlap="circular"  
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              badgeContent={
-                <VerifiedOutlined />
-              }
-              sx={{padding: 0.25}}
-            >
-              <Avatar
-                alt={`${user.firstName} ${user.lastName}`}
-                // src={}
-                sx={{ width: 100, height: 100, margin: '0 auto' }}
-              />
-            </Badge>
-          ) : (
-            <Avatar
-            alt={`${user.firstName} ${user.lastName}`}
-            sx={{ width: 100, height: 100, margin: '0 auto' }}
+      {user?.isEmailConfirmed ? (
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          badgeContent={
+            <VerifiedOutlined
+              sx={{
+                fontSize: 20,
+              }}
+            />
+          }
+          sx={{
+            '& .MuiBadge-badge': {
+              backgroundColor: '#4caf50',
+              color: '#fff',
+              width: 25,
+              height: 25,
+              borderRadius: '50%',
+            },
+          }}
+        >
+          <Avatar
+            alt={`${user?.firstName} ${user?.lastName}`}
+            sx={{
+              width: 100,
+              height: 100,
+              margin: '0 auto',
+              border: '2px solid #fff',
+            }}
           />
-          )
-          } 
-
-          {/* User Information */}
-          <Typography variant="h5" sx={{ marginTop: 2 }}>
-            {user.firstName} {user.lastName}
-          </Typography>
-          <Typography variant="body1" color="textSecondary" sx={{ marginBottom: 3 }}>
-            {user.email}
-          </Typography>
-
-          {/* Edit Profile Button */}
-          <Button variant="contained" color="primary" onClick={handleEditProfile}>
-            Edit Profile
-          </Button>
-        </>
-      }
+        </Badge>
+      ) : (
+        <Avatar
+          alt={`${user?.firstName} ${user?.lastName}`}
+          sx={{
+            width: 100,
+            height: 100,
+            margin: '0 auto',
+          }}
+        />
+      )}
+    
+      <Typography variant="h5" sx={{ marginTop: 2 }}>
+        {user?.firstName} {user?.lastName}
+      </Typography>
+      <Typography variant="body1" color="textSecondary" sx={{ marginBottom: 3 }}>
+        {user?.email}
+      </Typography>
+    
+      <Button variant="contained" color="primary" onClick={handleEditProfile}>
+        Edit Profile
+      </Button>
     </Paper>
   );
 };
