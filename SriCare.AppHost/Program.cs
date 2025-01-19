@@ -34,6 +34,10 @@ var paymentService = builder.AddNpmApp("paymentService","../SriCare.Payment", "s
                     .WithEnvironment("JWT_ISSUER", "https://authService/")
                     .WithEnvironment("JWT_AUDIENCE", "apis")
                     .WithEnvironment("JWT_SIGNING_KEY", "a3d42138-edb7-4eb7-9f89-dbc39ba1c6c4");
+
+var chatService = builder.AddNpmApp("chatService","../SriCare.ChatService","start")
+                    .WithHttpsEndpoint(port: 7300, env: "PORT",targetPort: 9000)
+                    .WithEnvironment("FE_PORT", "5000");
                   
 
 var billingService = builder.AddProject<Projects.SriCare_Billing_Api>("billingService")
@@ -58,6 +62,7 @@ var apiGateway = builder.AddProject<Projects.SriCare_ApiGateway>("apigateway")
 
 builder.AddNpmApp("webApp","../SriCare.WebApp","dev")
                     .WithReference(apiGateway)
+                    .WithReference(chatService)
                     .WaitFor(apiGateway)
                     .WithHttpsEndpoint(port: 5000, env: "PORT",targetPort: 5173)
                     .WithExternalHttpEndpoints();
