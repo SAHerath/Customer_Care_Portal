@@ -1,5 +1,7 @@
+
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { getCurrentUser } from "../services/authService";
 import {
   Box,
   Paper,
@@ -14,46 +16,32 @@ import {
 
 const socket = io("https://localhost:7300");
 
+interface Message {
+  sender: string;
+  text: string;
+}
+
 const Chat: React.FC = () => {
-  const [message, setMessage] = useState("");
-  // const [messages, setMessages] = useState<string[]>([]);
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>(
-    []
-  );
-
-  // useEffect(() => {
-  //   socket.on('receiveMessage', (message) => {
-  //     setMessages((prevMessages) => [...prevMessages, message]);
-  //   });
-
-  //   return () => {
-  //     socket.off('receiveMessage');
-  //   };
-  // }, [messages]);
-
-  // const sendMessage = () => {
-  //   socket.emit('sendMessage', message);
-  //   setMessage('');
-  // };
+  const [message, setMessage] = useState<string>(""); // Current input message
+  const [messages, setMessages] = useState<Message[]>([]); // Array of messages
+  const currentUser = getCurrentUser();
 
   useEffect(() => {
-    socket.on("receiveMessage", (message: { sender: string; text: string }) => {
-      console.log("New message received:", message);
-      setMessages((prevMessages) => [...prevMessages, message]);
+    socket.on("receiveMessage", (newMessage: Message) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
     return () => {
-      socket.off("receiveMessage");
+      socket.off('receiveMessage');
     };
   }, []);
 
   const sendMessage = () => {
-    if (message.trim() !== "") {
-      socket.emit("sendMessage", { sender: "Customer", text: message });
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "You", text: message },
-      ]);
+    if (message.trim()) {
+      const newMessage: Message = { sender: currentUser, text: message };
+      socket.emit("sendMessage", newMessage);
+
+      // setMessages((prevMessages) => [...prevMessages, newMessage]);
       setMessage("");
     }
   };
@@ -73,41 +61,44 @@ const Chat: React.FC = () => {
         sx={{
           flex: 1,
           overflowY: "auto",
-          padding: 1,
           border: "1px solid #ddd",
           borderRadius: 1.5,
-          backgroundColor: "#fff",
+          backgroundColor: "#f8f8f8",
           marginBottom: 2,
+          paddingLeft: 1,
+          paddingRight: 1,
         }}
       >
         <List>
           {messages.map((msg, index) => (
             <ListItem
               key={index}
-              alignItems="flex-start"
-              sx={{ marginBottom: 1 }}
+              alignItems="center"
+              sx={{
+                marginBottom: 1,
+                flexDirection: msg.sender === currentUser ? "row-reverse" : "row",
+                justifyContent: msg.sender === currentUser ? "flex-end" : "flex-start",
+              }}
             >
-              <ListItemAvatar>
-                <Avatar
-                  sx={{
-                    bgcolor:
-                      msg.sender === "You" ? "primary.main" : "secondary.main",
-                  }}
-                >
-                  {msg.sender.charAt(0)}
-                </Avatar>
-              </ListItemAvatar>
-              {/* <ListItemText
-                  primary={msg.sender}
-                  secondary={msg.text}
-                  primaryTypographyProps={{ fontWeight: msg.sender === 'You' ? 'bold' : 'normal' }}
-                /> */}
+              {/* {msg.sender !== currentUser && ( */}
+                <ListItemAvatar sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+                  <Avatar>
+                    {msg.sender.charAt(0).toUpperCase()}
+                  </Avatar>
+                </ListItemAvatar>
+              {/*  )} */}
               <ListItemText
-                primary={msg.sender}
+                primary={msg.sender === currentUser ? "You" : msg.sender}
                 secondary={msg.text}
-                slotProps={{
-                  primary: { variant: "h6", color: "primary" },
-                  secondary: { variant: "body2", color: "textSecondary" },
+                sx={{
+                  textAlign: msg.sender === currentUser ? "right" : "left",
+                  backgroundColor:
+                    msg.sender === currentUser ? "#d1e7dd" : "#dad7f8",
+                  padding: "0.5rem",
+                  borderRadius: "8px",
                 }}
               />
             </ListItem>
