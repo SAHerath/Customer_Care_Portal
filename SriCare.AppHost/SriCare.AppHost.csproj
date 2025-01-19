@@ -30,12 +30,14 @@
       <ItemGroup>
         <PackageJsonsPaymentService Include="..\SriCare.Payment\package.json" />
         <PackageJsonsWebApp Include="..\SriCare.WebApp\package.json" />
+        <PackageJsonsChatService Include="..\SriCare.ChatService\package.json" />
       </ItemGroup>
 
       <!-- Install npm packages if node_modules is missing -->
       <Message Importance="Normal" Text="Installing npm packages for %(PackageJsonsPaymentService.RelativeDir)" Condition="!Exists('%(PackageJsonsPaymentService.RootDir)%(PackageJsonsPaymentService.Directory)/node_modules')" />
       <Exec Command="npm install" WorkingDirectory="%(PackageJsonsPaymentService.RootDir)%(PackageJsonsPaymentService.Directory)" Condition="!Exists('%(PackageJsonsPaymentService.RootDir)%(PackageJsonsPaymentService.Directory)/node_modules')" />
       <Exec Command="npm install" WorkingDirectory="%(PackageJsonsWebApp.RootDir)%(PackageJsonsWebApp.Directory)" Condition="!Exists('%(PackageJsonsWebApp.RootDir)%(PackageJsonsWebApp.Directory)/node_modules')" />
+      <Exec Command="npm install" WorkingDirectory="%(PackageJsonsChatService.RootDir)%(PackageJsonsChatService.Directory)" Condition="!Exists('%(PackageJsonsChatService.RootDir)%(PackageJsonsChatService.Directory)/node_modules')" />
   </Target>
 
 </Project>

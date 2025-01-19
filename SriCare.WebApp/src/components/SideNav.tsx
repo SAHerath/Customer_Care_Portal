@@ -12,7 +12,7 @@ import {
   Collapse,
 } from "@mui/material";
 
-import { Home, Widgets, Receipt, Person, Notifications, Settings, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Home, Widgets, Receipt, Person, Chat, Notifications, Settings, ExpandLess, ExpandMore } from "@mui/icons-material";
 
 import Logo from "../assets/logo.png";
 
@@ -110,6 +110,15 @@ const SideNav: React.FC = () => {
                 <Person />  
               </ListItemIcon>
               <ListItemText primary="Profile" />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton component={LinkRouter} to="/dashboard/chat">
+              <ListItemIcon>
+                <Chat />
+              </ListItemIcon>
+              <ListItemText primary="Live Chat" />
             </ListItemButton>
           </ListItem>
 
